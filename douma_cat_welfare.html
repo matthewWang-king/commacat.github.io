@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>逗點浪貓關懷協會 — 在生命差點被略過的地方，留下繼續往前的機會</title>
+<meta name="description" content="逗點浪貓關懷協會（籌備中）——致力於浪貓救援、結紮、醫療照護與送養媒合，讓更多生命被看見，也被溫柔接住。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ===========================
+   RESET & BASE
+=========================== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --cream: #FAF6EE;
+  --cream-dark: #F0E8D8;
+  --cream-mid: #E8DCC8;
+  --brown: #6B4C2A;
+  --brown-light: #9B7B5A;
+  --brown-pale: #C4A882;
+  --brown-deep: #3C2410;
+  --green: #5C7A4E;
+  --green-light: #8FAB7F;
+  --green-pale: #D4E4C8;
+  --text-dark: #2C1F0E;
+  --text-mid: #5A3E22;
+  --text-light: #8B6A4A;
+  --text-muted: #B09070;
+  --white: #FFFDF8;
+  --shadow-sm: 0 2px 12px rgba(107,76,42,0.08);
+  --shadow-md: 0 8px 32px rgba(107,76,42,0.12);
+  --shadow-lg: 0 16px 60px rgba(107,76,42,0.16);
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+img { max-width: 100%; display: block; }
+a { text-decoration: none; transition: all 0.2s ease; }
+ul { list-style: none; }
+
+/* ===========================
+   UTILITIES
+=========================== */
+.serif { font-family: 'Noto Serif TC', serif; }
+.container { max-width: 1160px; margin: 0 auto; padding: 0 2rem; }
+.text-center { text-align: center; }
+
+.btn-primary {
+  display: inline-block;
+  background: var(--brown);
+  color: #FFF8EE;
+  padding: 13px 32px;
+  border-radius: 28px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  transition: background 0.2s, transform 0.2s;
+}
+.btn-primary:hover { background: var(--brown-deep); transform: translateY(-2px); color: #FFF8EE; }
+
+.btn-outline {
+  display: inline-block;
+  border: 1.5px solid var(--brown-pale);
+  color: var(--brown);
+  padding: 13px 32px;
+  border-radius: 28px;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+.btn-outline:hover { border-color: var(--brown); background: var(--cream-dark); color: var(--brown); }
+
+.btn-green {
+  display: inline-block;
+  background: var(--green);
+  color: #fff;
+  padding: 13px 32px;
+  border-radius: 28px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+.btn-green:hover { background: var(--green-light); color: #fff; transform: translateY(-2px); }
+
+.section-tag {
+  font-size: 11px;
+  color: var(--green);
+  letter-spacing: 0.25em;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+  display: block;
+}
+.section-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  font-weight: 700;
+  color: var(--brown);
+  line-height: 1.5;
+}
+.section-sub {
+  font-size: 15px;
+  color: var(--text-light);
+  line-height: 2;
+  margin-top: 0.8rem;
+  max-width: 560px;
+}
+
+/* ===========================
+   NOTICE BANNER
+=========================== */
+.notice-banner {
+  background: var(--green);
+  color: rgba(255,255,255,0.92);
+  text-align: center;
+  padding: 10px 2rem;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  position: relative;
+}
+.notice-banner span { opacity: 0.7; margin: 0 0.5rem; }
+
+/* ===========================
+   NAVIGATION
+=========================== */
+nav {
+  background: rgba(250,246,238,0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--cream-dark);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--brown);
+}
+.logo-comma {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--green);
+  line-height: 1;
+  margin-top: -4px;
+}
+.logo-text {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--brown);
+  line-height: 1.3;
+}
+.logo-text small {
+  display: block;
+  font-size: 10px;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.15em;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.nav-links a {
+  font-size: 14px;
+  color: var(--text-mid);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+.nav-links a:hover { color: var(--brown); }
+.nav-cta {
+  background: var(--brown) !important;
+  color: #FFF8EE !important;
+  padding: 9px 22px;
+  border-radius: 22px;
+  font-weight: 500 !important;
+}
+.nav-cta:hover { background: var(--brown-deep) !important; }
+.nav-mobile-btn {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+.nav-mobile-btn span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--brown);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+/* ===========================
+   HERO
+=========================== */
+.hero {
+  min-height: calc(100vh - 100px);
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 4rem;
+  padding: 5rem 2rem 4rem;
+  max-width: 1160px;
+  margin: 0 auto;
+}
+.hero-badge {
+  display: inline-block;
+  background: var(--green-pale);
+  color: var(--green);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  padding: 5px 14px;
+  border-radius: 14px;
+  margin-bottom: 1.4rem;
+  font-weight: 500;
+}
+.hero h1 {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(1.9rem, 3.2vw, 2.9rem);
+  font-weight: 700;
+  color: var(--brown);
+  line-height: 1.5;
+  margin-bottom: 1.2rem;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--green);
+  border-bottom: 2px solid var(--green-pale);
+  padding-bottom: 2px;
+}
+.hero-desc {
+  font-size: 15px;
+  color: var(--text-light);
+  line-height: 2;
+  margin-bottom: 2.2rem;
+  max-width: 460px;
+}
+.hero-btns {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Hero visual — cat card */
+.hero-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hero-cat-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem 2rem 2rem;
+  max-width: 320px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  border: 1px solid rgba(180,150,110,0.2);
+}
+.hero-cat-card .deco-butterfly {
+  position: absolute;
+  top: -18px;
+  right: -10px;
+  font-size: 32px;
+  transform: rotate(15deg);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+.hero-cat-card .deco-butterfly2 {
+  position: absolute;
+  bottom: 20px;
+  left: -14px;
+  font-size: 22px;
+  transform: rotate(-20deg);
+  opacity: 0.7;
+}
+.cat-avatar {
+  width: 110px;
+  height: 110px;
+  background: linear-gradient(135deg, #1A1A1A, #3A3A3A);
+  border-radius: 50%;
+  margin: 0 auto 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  box-shadow: 0 6px 28px rgba(0,0,0,0.25);
+  position: relative;
+}
+.cat-avatar::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px dashed var(--brown-pale);
+  opacity: 0.5;
+}
+.cat-card-name {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--brown);
+  text-align: center;
+  margin-bottom: 0.3rem;
+}
+.cat-card-role {
+  font-size: 11px;
+  color: var(--green);
+  text-align: center;
+  letter-spacing: 0.15em;
+  margin-bottom: 1rem;
+}
+.cat-card-story {
+  font-size: 13px;
+  color: var(--text-light);
+  text-align: center;
+  line-height: 1.9;
+  margin-bottom: 1.5rem;
+}
+.cat-read-btn {
+  display: block;
+  background: var(--green);
+  color: #fff;
+  text-align: center;
+  padding: 11px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+.cat-read-btn:hover { background: var(--green-light); color: #fff; }
+.hero-scroll-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2.5rem;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+}
+.scroll-line {
+  width: 40px;
+  height: 1px;
+  background: var(--brown-pale);
+}
+
+/* ===========================
+   STATS BAR
+=========================== */
+.stats-bar {
+  background: var(--brown);
+  padding: 2.2rem;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+.stat-item { text-align: center; }
+.stat-num {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #FFF8EE;
+  display: block;
+  line-height: 1.2;
+}
+.stat-label {
+  font-size: 12px;
+  color: rgba(255,248,238,0.65);
+  letter-spacing: 0.08em;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+.stats-divider {
+  width: 1px;
+  background: rgba(255,248,238,0.15);
+  margin: auto;
+}
+
+/* ===========================
+   ABOUT SECTION
+=========================== */
+.about-section {
+  padding: 6rem 2rem;
+  max-width: 1160px;
+  margin: 0 auto;
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+.about-visual {
+  position: relative;
+}
+.about-quote-card {
+  background: var(--cream-dark);
+  border-radius: var(--radius-xl);
+  padding: 3rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.about-quote-card::before {
+  content: '「';
+  font-family: 'Noto Serif TC', serif;
+  font-size: 120px;
+  color: rgba(107,76,42,0.08);
+  position: absolute;
+  top: -20px;
+  left: 10px;
+  line-height: 1;
+}
+.about-quote-text {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--brown);
+  line-height: 2;
+  position: relative;
+  z-index: 1;
+}
+.about-quote-source {
+  margin-top: 1.5rem;
+  font-size: 13px;
+  color: var(--text-light);
+  letter-spacing: 0.08em;
+}
+.about-deco-strip {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, var(--green) 0%, var(--green-light) 60%, var(--brown-pale) 100%);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+}
+.about-floating-card {
+  position: absolute;
+  bottom: -24px;
+  right: -16px;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.2rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(180,150,110,0.2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 180px;
+}
+.about-floating-icon { font-size: 24px; }
+.about-floating-text { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+.about-floating-text strong { font-weight: 500; color: var(--brown); }
+
+.about-content h2 {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+  font-weight: 700;
+  color: var(--brown);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+.about-para {
+  font-size: 14.5px;
+  color: var(--text-light);
+  line-height: 2.1;
+  margin-bottom: 1.2rem;
+}
+.about-highlight {
+  background: var(--green-pale);
+  border-left: 3px solid var(--green);
+  padding: 1rem 1.2rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin: 1.5rem 0;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 15px;
+  color: var(--text-mid);
+  line-height: 1.9;
+}
+.about-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+.tag {
+  background: var(--cream-dark);
+  color: var(--brown-light);
+  font-size: 12px;
+  padding: 5px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(155,123,90,0.25);
+}
+
+/* ===========================
+   MISSIONS SECTION
+=========================== */
+.missions-section {
+  background: var(--cream-dark);
+  padding: 6rem 2rem;
+}
+.missions-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+}
+.missions-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+.missions-header .section-sub { margin: 0.8rem auto 0; }
+.missions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+.mission-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  border: 1px solid rgba(180,150,110,0.15);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.mission-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+}
+.mission-icon {
+  width: 64px;
+  height: 64px;
+  background: var(--cream-dark);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 1.2rem;
+  transition: background 0.2s;
+}
+.mission-card:hover .mission-icon { background: var(--green-pale); }
+.mission-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--brown);
+  margin-bottom: 0.5rem;
+}
+.mission-desc {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.8;
+}
+.mission-num {
+  font-size: 11px;
+  color: var(--green);
+  letter-spacing: 0.12em;
+  margin-bottom: 0.8rem;
+  display: block;
+}
+
+/* ===========================
+   STORIES SECTION
+=========================== */
+.stories-section {
+  padding: 6rem 2rem;
+  max-width: 1160px;
+  margin: 0 auto;
+}
+.stories-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 3rem;
+}
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.story-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid rgba(180,150,110,0.15);
+  transition: transform 0.25s, box-shadow 0.25s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+.story-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+.story-img {
+  height: 200px;
+  background: var(--cream-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 72px;
+  position: relative;
+  overflow: hidden;
+}
+.story-img-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(transparent, var(--white));
+}
+.story-status {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 12px;
+  letter-spacing: 0.08em;
+}
+.status-adopted { background: #D4E4C8; color: #3B6D11; }
+.status-seeking { background: #FAC775; color: #633806; }
+.status-care { background: #B5D4F4; color: #0C447C; }
+.story-body { padding: 1.4rem 1.4rem 1.6rem; flex: 1; display: flex; flex-direction: column; }
+.story-cat-tag {
+  font-size: 11px;
+  color: var(--green);
+  letter-spacing: 0.12em;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+.story-cat-name {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--brown);
+  margin-bottom: 0.5rem;
+}
+.story-cat-desc {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.8;
+  flex: 1;
+  margin-bottom: 1.2rem;
+}
+.story-cat-link {
+  font-size: 13px;
+  color: var(--green);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.story-cat-link:hover { color: var(--green-light); }
+
+/* Featured story */
+.story-card-featured {
+  grid-column: span 1;
+  border: 2px solid var(--green-pale);
+}
+.story-card-featured .story-img { background: linear-gradient(135deg, #2C2C2A 0%, #4A4A4A 100%); }
+
+/* ===========================
+   NAME SECTION
+=========================== */
+.name-section {
+  background: var(--brown);
+  padding: 6rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.name-section::before {
+  content: '，';
+  font-family: 'Noto Serif TC', serif;
+  font-size: 320px;
+  color: rgba(255,248,238,0.04);
+  position: absolute;
+  right: -30px;
+  top: -60px;
+  line-height: 1;
+  pointer-events: none;
+}
+.name-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+.name-content h2 {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: #FFF8EE;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+.name-content h2 em {
+  font-style: normal;
+  color: var(--green-light);
+}
+.name-para {
+  font-size: 15px;
+  color: rgba(255,248,238,0.72);
+  line-height: 2.1;
+  margin-bottom: 1rem;
+}
+.name-para strong { color: rgba(255,248,238,0.9); font-weight: 500; }
+.name-cta { margin-top: 2rem; }
+
+.name-pillars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.pillar-card {
+  background: rgba(255,248,238,0.07);
+  border: 1px solid rgba(255,248,238,0.12);
+  border-radius: var(--radius-md);
+  padding: 1.5rem 1.2rem;
+  transition: background 0.2s;
+}
+.pillar-card:hover { background: rgba(255,248,238,0.11); }
+.pillar-icon { font-size: 26px; margin-bottom: 0.8rem; display: block; }
+.pillar-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #FFF8EE;
+  margin-bottom: 0.4rem;
+}
+.pillar-text { font-size: 12.5px; color: rgba(255,248,238,0.6); line-height: 1.7; }
+
+/* ===========================
+   SUPPORT SECTION
+=========================== */
+.support-section {
+  padding: 6rem 2rem;
+  max-width: 1160px;
+  margin: 0 auto;
+}
+.support-header { text-align: center; margin-bottom: 3.5rem; }
+.support-header .section-sub { margin: 0.8rem auto 0; }
+.support-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem;
+  margin-bottom: 2.5rem;
+}
+.support-card {
+  background: var(--cream-dark);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.2rem 1.5rem;
+  text-align: center;
+  border: 1px solid rgba(180,150,110,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.support-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-sm);
+}
+.support-icon-wrap {
+  width: 54px;
+  height: 54px;
+  background: var(--brown);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin: 0 auto 1.1rem;
+}
+.support-card-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--brown);
+  margin-bottom: 0.5rem;
+}
+.support-card-desc {
+  font-size: 12.5px;
+  color: var(--text-light);
+  line-height: 1.75;
+}
+.support-notice {
+  background: var(--cream-mid);
+  border-radius: var(--radius-md);
+  padding: 1.2rem 2rem;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.8;
+  border: 1px solid rgba(180,150,110,0.25);
+  max-width: 700px;
+  margin: 0 auto;
+}
+.support-notice strong { color: var(--brown); font-weight: 500; }
+
+/* ===========================
+   TESTIMONIAL / VISION
+=========================== */
+.vision-section {
+  background: var(--cream-dark);
+  padding: 5rem 2rem;
+  text-align: center;
+}
+.vision-inner { max-width: 760px; margin: 0 auto; }
+.vision-icon { font-size: 48px; margin-bottom: 1.5rem; }
+.vision-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+  font-weight: 700;
+  color: var(--brown);
+  line-height: 1.6;
+  margin-bottom: 1.2rem;
+}
+.vision-text {
+  font-size: 15px;
+  color: var(--text-light);
+  line-height: 2.1;
+  margin-bottom: 2rem;
+}
+.vision-tagline {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--green);
+  letter-spacing: 0.08em;
+}
+
+/* ===========================
+   JOIN / CTA SECTION
+=========================== */
+.join-section {
+  padding: 5rem 2rem;
+  text-align: center;
+}
+.join-inner { max-width: 600px; margin: 0 auto; }
+.join-section h2 {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: var(--brown);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.join-section p { font-size: 14.5px; color: var(--text-light); line-height: 2; margin-bottom: 2rem; }
+.join-form {
+  display: flex;
+  gap: 0.75rem;
+  max-width: 440px;
+  margin: 0 auto 1rem;
+}
+.join-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1.5px solid var(--cream-mid);
+  border-radius: 24px;
+  font-size: 14px;
+  background: var(--white);
+  color: var(--text-dark);
+  font-family: 'Noto Sans TC', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.join-input:focus { border-color: var(--brown-pale); }
+.join-input::placeholder { color: var(--text-muted); }
+.join-privacy { font-size: 12px; color: var(--text-muted); }
+
+/* ===========================
+   FOOTER
+=========================== */
+footer {
+  background: var(--brown-deep);
+  padding: 4rem 2rem 2rem;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem;
+  max-width: 1160px;
+  margin: 0 auto 3rem;
+}
+.footer-brand {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: #FFF8EE;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.footer-brand .comma { color: var(--green-light); font-size: 28px; line-height: 1; }
+.footer-desc {
+  font-size: 13px;
+  color: rgba(255,248,238,0.5);
+  line-height: 1.9;
+  margin-bottom: 1.5rem;
+}
+.footer-social {
+  display: flex;
+  gap: 0.75rem;
+}
+.social-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255,248,238,0.18);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: rgba(255,248,238,0.6);
+  transition: all 0.2s;
+}
+.social-btn:hover {
+  border-color: rgba(255,248,238,0.45);
+  color: #FFF8EE;
+  background: rgba(255,248,238,0.08);
+}
+.footer-col-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,248,238,0.9);
+  letter-spacing: 0.14em;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+.footer-links li { margin-bottom: 0.6rem; }
+.footer-links a {
+  font-size: 13px;
+  color: rgba(255,248,238,0.5);
+}
+.footer-links a:hover { color: rgba(255,248,238,0.9); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,248,238,0.1);
+  padding-top: 1.5rem;
+  max-width: 1160px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-bottom-copy {
+  font-size: 12px;
+  color: rgba(255,248,238,0.3);
+}
+.footer-tagline {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 13px;
+  color: rgba(255,248,238,0.4);
+  font-style: italic;
+}
+
+/* ===========================
+   BACK TO TOP
+=========================== */
+.back-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 44px;
+  height: 44px;
+  background: var(--brown);
+  color: #FFF8EE;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.2s;
+  z-index: 150;
+  border: none;
+}
+.back-top.visible { opacity: 1; pointer-events: all; }
+.back-top:hover { transform: translateY(-3px); background: var(--brown-deep); }
+
+/* ===========================
+   MOBILE MENU
+=========================== */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(44,31,14,0.55);
+  z-index: 300;
+  backdrop-filter: blur(4px);
+}
+.mobile-menu-inner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 280px;
+  background: var(--cream);
+  padding: 5rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.mobile-menu-close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.5rem;
+  font-size: 24px;
+  color: var(--brown);
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+.mobile-menu a {
+  font-size: 16px;
+  color: var(--text-mid);
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--cream-dark);
+  display: block;
+}
+.mobile-menu a:hover { color: var(--brown); }
+
+/* ===========================
+   ANIMATIONS
+=========================== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-up { animation: fadeUp 0.75s ease both; }
+.animate-up-delay { animation: fadeUp 0.75s 0.2s ease both; }
+.animate-up-delay2 { animation: fadeUp 0.75s 0.4s ease both; }
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 3rem 1.5rem;
+    min-height: auto;
+  }
+  .hero-desc { margin-left: auto; margin-right: auto; }
+  .hero-btns { justify-content: center; }
+  .hero-scroll-hint { display: none; }
+  .hero-visual { order: -1; }
+  .hero-cat-card { max-width: 280px; }
+
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .about-floating-card { display: none; }
+  .missions-grid { grid-template-columns: repeat(2, 1fr); }
+  .stories-grid { grid-template-columns: 1fr 1fr; }
+  .name-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .support-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+
+  .nav-links { display: none; }
+  .nav-mobile-btn { display: flex; }
+  .mobile-menu.open { display: block; }
+}
+
+@media (max-width: 600px) {
+  .stories-grid { grid-template-columns: 1fr; }
+  .missions-grid { grid-template-columns: 1fr 1fr; }
+  .support-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+  .join-form { flex-direction: column; }
+  .name-pillars { grid-template-columns: 1fr 1fr; }
+  .stories-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NOTICE BANNER -->
+<div class="notice-banner">
+  🦋 協會籌備中，正式立案後將另行公告
+  <span>|</span>
+  歡迎登記支持意願，成為我們第一批夥伴
+</div>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <span class="logo-comma">，</span>
+      <div class="logo-text">
+        逗點浪貓關懷協會
+        <small>DOUMA CAT WELFARE</small>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">關於逗點</a></li>
+      <li><a href="#missions">我們的使命</a></li>
+      <li><a href="#stories">浪貓故事</a></li>
+      <li><a href="#why">為什麼叫逗點</a></li>
+      <li><a href="#support">如何支持</a></li>
+      <li><a href="#join" class="nav-cta">立即登記</a></li>
+    </ul>
+    <div class="nav-mobile-btn" id="mobileMenuBtn" onclick="openMenu()" aria-label="開啟選單">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu" onclick="closeMenuOutside(event)">
+  <div class="mobile-menu-inner">
+    <button class="mobile-menu-close" onclick="closeMenu()">✕</button>
+    <a href="#about" onclick="closeMenu()">關於逗點</a>
+    <a href="#missions" onclick="closeMenu()">我們的使命</a>
+    <a href="#stories" onclick="closeMenu()">浪貓故事</a>
+    <a href="#why" onclick="closeMenu()">為什麼叫逗點</a>
+    <a href="#support" onclick="closeMenu()">如何支持</a>
+    <a href="#join" onclick="closeMenu()" style="color:var(--green);font-weight:500;">立即登記意願</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section>
+  <div class="hero">
+    <div class="hero-text animate-up">
+      <div class="hero-badge">🦋 籌備中 · COMING SOON · 2025</div>
+      <h1>
+        在生命差點被略過的地方，<br>
+        留下一個<em>繼續往前</em>的機會。
+      </h1>
+      <p class="hero-desc">
+        逗點，不是結束。<br>
+        每一隻浪貓都值得被看見、被理解，也被溫柔接住。<br>
+        我們在牠們人生的逗點，留下陪伴與希望。
+      </p>
+      <div class="hero-btns">
+        <a href="#about" class="btn-primary">了解逗點</a>
+        <a href="#support" class="btn-outline">如何支持我們</a>
+      </div>
+      <div class="hero-scroll-hint">
+        <span class="scroll-line"></span>
+        <span style="font-size:11px;color:var(--text-muted);letter-spacing:0.14em;">向下探索</span>
+      </div>
+    </div>
+    <div class="hero-visual animate-up-delay">
+      <div class="hero-cat-card">
+        <span class="deco-butterfly">🦋</span>
+        <span class="deco-butterfly2">🦋</span>
+        <div class="cat-avatar">🐱</div>
+        <div class="cat-card-name">吉吉</div>
+        <div class="cat-card-role">JIJI · 逗點的起點</div>
+        <p class="cat-card-story">
+          一隻跑來公司前覓食的小黑貓，<br>
+          像蝴蝶效應裡第一下拍動的翅膀，<br>
+          讓我從餵養走向了這條路。
+        </p>
+        <a href="#stories" class="cat-read-btn">閱讀吉吉的故事 →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <span class="stat-num">吉吉</span>
+      <div class="stat-label">創辦起源<br>一隻小黑貓的蝴蝶效應</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">TNR</span>
+      <div class="stat-label">結紮救援<br>人道控制族群</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">送養</span>
+      <div class="stat-label">媒合照護<br>為每隻貓找到家</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">協會</span>
+      <div class="stat-label">籌備中<br>即將正式立案</div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT SECTION -->
+<section class="about-section" id="about">
+  <div class="about-grid">
+    <div class="about-visual">
+      <div class="about-quote-card">
+        <p class="about-quote-text">
+          『逗點浪貓關懷協會』的起點，<br>
+          是一隻跑來公司前吃飯的小黑貓吉吉。<br><br>
+          牠像蝴蝶效應裡最初拍動翅膀的那一下，<br>
+          讓我從餵養開始，慢慢走進收編、救援、<br>
+          結紮、送養與協會籌備的路。
+        </p>
+        <p class="about-quote-source">— 逗點創辦人</p>
+        <div class="about-deco-strip"></div>
+      </div>
+      <div class="about-floating-card">
+        <span class="about-floating-icon">🦋</span>
+        <div class="about-floating-text">
+          <strong>蝴蝶效應</strong><br>
+          每一個善意的逗點，<br>都能改變一條生命的走向
+        </div>
+      </div>
+    </div>
+    <div class="about-content">
+      <span class="section-tag">關於逗點 · About Us</span>
+      <h2>每一位願意伸出手的人，<br>都是牠們生命裡的逗點。</h2>
+      <p class="about-para">
+        浪貓不是不美，只是牠們的美常被流浪、傷病與恐懼暫時遮住。
+        我們相信，只要途中有人願意接住牠們，給牠們醫療、結紮、
+        照護與一個被理解的機會，牠們也能重新展開生命。
+      </p>
+      <div class="about-highlight">
+        逗點浪貓關懷協會想成為的，是一座溫柔的蝴蝶博物館：
+        讓人、心與浪貓，都在這裡被看見，也慢慢蛻變。
+      </div>
+      <p class="about-para">
+        我們在籌備正式立案中，目前積極推動 TNR 結紮計畫、
+        緊急醫療救援、個人化送養媒合，以及浪貓友善倡議。
+      </p>
+      <div class="about-tags">
+        <span class="tag">🐱 浪貓救援</span>
+        <span class="tag">✂️ TNR 結紮</span>
+        <span class="tag">🏥 醫療照護</span>
+        <span class="tag">🏡 送養媒合</span>
+        <span class="tag">🦋 生命倡議</span>
+        <span class="tag">🤝 志工培訓</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSIONS SECTION -->
+<section class="missions-section" id="missions">
+  <div class="missions-inner">
+    <div class="missions-header">
+      <span class="section-tag">我們的使命 · Our Missions</span>
+      <h2 class="section-title">四個核心行動，守護每一條生命</h2>
+      <p class="section-sub">從街頭到家庭，我們在每一個環節留下逗點，讓浪貓的故事得以繼續書寫。</p>
+    </div>
+    <div class="missions-grid">
+      <div class="mission-card">
+        <span class="mission-num">01</span>
+        <div class="mission-icon">🏥</div>
+        <div class="mission-title">醫療救援</div>
+        <p class="mission-desc">
+          對於受傷、生病的流浪貓，即時提供醫療介入與後續照護，
+          讓每一條走到懸崖邊的生命都有機會被拉回。
+        </p>
+      </div>
+      <div class="mission-card">
+        <span class="mission-num">02</span>
+        <div class="mission-icon">✂️</div>
+        <div class="mission-title">TNR 結紮計畫</div>
+        <p class="mission-desc">
+          透過「捕捉、絕育、回置」的人道方式，
+          減少流浪貓繁殖，讓族群在尊重下逐漸穩定。
+        </p>
+      </div>
+      <div class="mission-card">
+        <span class="mission-num">03</span>
+        <div class="mission-icon">🏡</div>
+        <div class="mission-title">送養媒合</div>
+        <p class="mission-desc">
+          為每一隻貓找到適合的家庭，透過個性評估、
+          飼主訪談與後續追蹤，確保每一段緣分都能長久。
+        </p>
+      </div>
+      <div class="mission-card">
+        <span class="mission-num">04</span>
+        <div class="mission-icon">🦋</div>
+        <div class="mission-title">教育倡議</div>
+        <p class="mission-desc">
+          讓社會看見浪貓的處境與美好，
+          推廣友善共存的觀念，讓更多人成為
+          浪貓生命中的逗點。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORIES SECTION -->
+<section class="stories-section" id="stories">
+  <div class="stories-header">
+    <div>
+      <span class="section-tag">浪貓故事 · Cat Stories</span>
+      <h2 class="section-title">每一隻，都有一個<br>值得被說的故事</h2>
+    </div>
+    <a href="#" class="btn-outline" style="white-space:nowrap;flex-shrink:0;">查看全部故事</a>
+  </div>
+  <div class="stories-grid">
+    <div class="story-card story-card-featured">
+      <div class="story-img" style="background:linear-gradient(135deg,#1A1A1A 0%,#444 100%);">
+        <span style="z-index:1;position:relative">🐈‍⬛</span>
+        <div class="story-img-overlay"></div>
+        <span class="story-status status-adopted">送養成功 ✓</span>
+      </div>
+      <div class="story-body">
+        <div class="story-cat-tag">創辦起源 · 吉吉的故事</div>
+        <div class="story-cat-name">吉吉 — 起點的那一下</div>
+        <p class="story-cat-desc">
+          一隻黑色的小身影，突然出現在公司門前。
+          就是這個平凡的下午，讓一切都不一樣了。
+          吉吉是逗點的起點，也是最初拍動翅膀的那一下。
+        </p>
+        <a href="#" class="story-cat-link">閱讀完整故事 →</a>
+      </div>
+    </div>
+    <div class="story-card">
+      <div class="story-img" style="background:var(--cream-mid);">
+        🐱
+        <div class="story-img-overlay"></div>
+        <span class="story-status status-seeking">待送養</span>
+      </div>
+      <div class="story-body">
+        <div class="story-cat-tag">待送養 · 正在等待</div>
+        <div class="story-cat-name">牠們在等一個家</div>
+        <p class="story-cat-desc">
+          浪貓不是不美，只是牠們的美常被流浪、
+          傷病與恐懼暫時遮住。給牠們一個機會，
+          牠們也能重新展開生命。
+        </p>
+        <a href="#" class="story-cat-link">查看待送養貓咪 →</a>
+      </div>
+    </div>
+    <div class="story-card">
+      <div class="story-img" style="background:#E8DCC8;">
+        🦋
+        <div class="story-img-overlay"></div>
+        <span class="story-status status-care">照護中</span>
+      </div>
+      <div class="story-body">
+        <div class="story-cat-tag">志工日記 · 蛻變</div>
+        <div class="story-cat-name">在這裡，慢慢蛻變</div>
+        <p class="story-cat-desc">
+          逗點想成為的，是一座溫柔的蝴蝶博物館。
+          讓人、心與浪貓，都在這裡被看見，
+          也一起慢慢蛻變成更好的樣子。
+        </p>
+        <a href="#" class="story-cat-link">了解志工故事 →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAME SECTION -->
+<section class="name-section" id="why">
+  <div class="name-inner">
+    <div class="name-content">
+      <span class="section-tag" style="color:var(--green-light);">為什麼叫逗點 · Why Douma</span>
+      <h2>逗點，是生命<br>差點被<em>略過</em>的地方，<br>留下繼續的機會。</h2>
+      <p class="name-para">
+        我把協會取名為逗點，是因為<strong>逗點不是結束</strong>，
+        而是在生命差點被略過的地方，留下一個繼續往前的機會。
+      </p>
+      <p class="name-para">
+        浪貓不是不美，只是牠們的美常被流浪、傷病與恐懼暫時遮住。
+        只要途中有人願意接住牠們，給牠們醫療、結紮、照護與
+        一個被理解的機會，<strong>牠們也能重新展開生命。</strong>
+      </p>
+      <p class="name-para">
+        每一位願意伸出手的人，都是牠們生命裡的逗點。
+      </p>
+      <div class="name-cta">
+        <a href="#join" class="btn-green">成為逗點</a>
+      </div>
+    </div>
+    <div class="name-pillars">
+      <div class="pillar-card">
+        <span class="pillar-icon">👁️</span>
+        <div class="pillar-title">被看見</div>
+        <p class="pillar-text">讓每一隻浪貓都不再是角落裡透明的存在</p>
+      </div>
+      <div class="pillar-card">
+        <span class="pillar-icon">💊</span>
+        <div class="pillar-title">被醫治</div>
+        <p class="pillar-text">傷病不是牠們的命運，而是可以被改變的處境</p>
+      </div>
+      <div class="pillar-card">
+        <span class="pillar-icon">🤝</span>
+        <div class="pillar-title">被理解</div>
+        <p class="pillar-text">牠們的行為有原因，牠們的恐懼值得被懂</p>
+      </div>
+      <div class="pillar-card">
+        <span class="pillar-icon">🏠</span>
+        <div class="pillar-title">被接住</div>
+        <p class="pillar-text">最終，每一條生命都值得一個溫暖的家</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPORT SECTION -->
+<section class="support-section" id="support">
+  <div class="support-header">
+    <span class="section-tag">你可以怎麼支持 · How to Help</span>
+    <h2 class="section-title">每一個逗點，<br>都由你們留下</h2>
+    <p class="section-sub">協會目前籌備中，以下是你現在可以參與的方式。</p>
+  </div>
+  <div class="support-grid">
+    <div class="support-card">
+      <div class="support-icon-wrap">📢</div>
+      <div class="support-card-title">關注籌備進度</div>
+      <p class="support-card-desc">追蹤粉絲專頁、加入 LINE 帳號，第一時間掌握協會動態與重要公告</p>
+    </div>
+    <div class="support-card">
+      <div class="support-icon-wrap">📝</div>
+      <div class="support-card-title">登記會員意願</div>
+      <p class="support-card-desc">留下聯絡資料，正式立案後優先通知入會，成為協會創始夥伴</p>
+    </div>
+    <div class="support-card">
+      <div class="support-icon-wrap">🤝</div>
+      <div class="support-card-title">登記志工意向</div>
+      <p class="support-card-desc">告訴我們你能提供什麼，醫療、攝影、社群、捕貓、運輸，都需要你</p>
+    </div>
+    <div class="support-card">
+      <div class="support-icon-wrap">💌</div>
+      <div class="support-card-title">分享與擴散</div>
+      <p class="support-card-desc">轉發貓咪故事、分享協會資訊，讓更多人知道浪貓需要的改變</p>
+    </div>
+  </div>
+  <div class="support-notice">
+    <strong>📋 籌備期說明</strong><br>
+    目前為協會籌備階段，正式會員、捐款與相關制度，<br>
+    將於合法立案後另行公告，敬請期待。
+  </div>
+</section>
+
+<!-- VISION SECTION -->
+<section class="vision-section">
+  <div class="vision-inner">
+    <div class="vision-icon">🦋</div>
+    <h2 class="vision-title">
+      我們想成為一座溫柔的蝴蝶博物館，<br>
+      讓人、心與浪貓，都在這裡被看見，<br>
+      也慢慢蛻變。
+    </h2>
+    <p class="vision-text">
+      每一隻走進逗點的浪貓，都帶著自己的傷與故事。
+      而每一位願意停下來的人，都讓這個世界，
+      多了一個溫柔的逗點。
+    </p>
+    <div class="vision-tagline">讓更多生命，被看見，也被溫柔接住。</div>
+  </div>
+</section>
+
+<!-- JOIN SECTION -->
+<section class="join-section" id="join">
+  <div class="join-inner">
+    <div class="section-tag" style="text-align:center;display:block">立即登記 · Register Now</div>
+    <h2>留下你的聯絡方式，<br>成為逗點最早的夥伴</h2>
+    <p>協會正式立案後，我們將第一時間通知你。<br>你的支持，是我們繼續前行最重要的力量。</p>
+    <div class="join-form">
+      <input type="email" class="join-input" placeholder="請輸入你的 Email">
+      <a href="#" class="btn-primary" style="white-space:nowrap">登記意願</a>
+    </div>
+    <p class="join-privacy">我們尊重你的隱私，不會將資料用於其他用途。</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">
+        <span class="comma">，</span>
+        逗點浪貓關懷協會
+      </div>
+      <p class="footer-desc">
+        在生命差點被略過的地方，留下一個繼續往前的機會。<br>
+        讓更多生命，被看見，也被溫柔接住。<br><br>
+        （協會籌備中，尚未正式立案）
+      </p>
+      <div class="footer-social">
+        <a href="#" class="social-btn" title="Facebook">f</a>
+        <a href="#" class="social-btn" title="Instagram">ig</a>
+        <a href="#" class="social-btn" title="LINE">L</a>
+        <a href="#" class="social-btn" title="Email">✉</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">關於我們</div>
+      <ul class="footer-links">
+        <li><a href="#about">逗點的起源</a></li>
+        <li><a href="#missions">我們的使命</a></li>
+        <li><a href="#why">為什麼叫逗點</a></li>
+        <li><a href="#stories">浪貓故事</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">參與方式</div>
+      <ul class="footer-links">
+        <li><a href="#support">如何支持</a></li>
+        <li><a href="#join">登記意願</a></li>
+        <li><a href="#support">成為志工</a></li>
+        <li><a href="#join">會員登記</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">聯絡我們</div>
+      <ul class="footer-links">
+        <li><a href="#">Facebook 粉絲專頁</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">LINE 官方帳號</a></li>
+        <li><a href="#">電子郵件聯絡</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-bottom-copy">
+      © 2025 逗點浪貓關懷協會（籌備中）· 版權所有
+    </span>
+    <span class="footer-tagline">讓更多生命，被看見，也被溫柔接住。🦋</span>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button class="back-top" id="backTop" onclick="scrollToTop()" aria-label="回到頂部">↑</button>
+
+<script>
+// Mobile menu
+function openMenu(){
+  document.getElementById('mobileMenu').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeMenu(){
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeMenuOutside(e){
+  if(e.target===document.getElementById('mobileMenu')) closeMenu();
+}
+
+// Back to top
+window.addEventListener('scroll',function(){
+  var btn = document.getElementById('backTop');
+  if(window.scrollY > 400) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+});
+function scrollToTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
+
+// Smooth anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',function(e){
+    var id=this.getAttribute('href');
+    if(id==='#') return;
+    var el=document.querySelector(id);
+    if(el){
+      e.preventDefault();
+      el.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  });
+});
+
+// Email form placeholder action
+document.querySelector('.join-form').addEventListener('click',function(e){
+  if(e.target.tagName==='A'){
+    e.preventDefault();
+    var input=this.querySelector('input');
+    if(input.value && input.value.includes('@')){
+      alert('謝謝你的支持！我們會在協會正式立案後第一時間通知你。\n\n讓更多生命，被看見，也被溫柔接住。🦋');
+      input.value='';
+    } else {
+      input.focus();
+      input.style.borderColor='var(--brown)';
+      setTimeout(()=>input.style.borderColor='',2000);
+    }
+  }
+});
+
+// Intersection observer for subtle entrance animations
+if('IntersectionObserver' in window){
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        en.target.style.opacity='1';
+        en.target.style.transform='translateY(0)';
+      }
+    });
+  },{threshold:0.1});
+  document.querySelectorAll('.mission-card,.story-card,.support-card,.pillar-card').forEach(function(el){
+    el.style.opacity='0';
+    el.style.transform='translateY(20px)';
+    el.style.transition='opacity 0.5s ease, transform 0.5s ease';
+    obs.observe(el);
+  });
+}
+</script>
+</body>
+</html>
