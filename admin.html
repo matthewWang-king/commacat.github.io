@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>後台管理 — 彰化縣逗點浪貓關懷協會</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const _sb = window.supabase.createClient(
+  'https://jztxmetatuufhfitjqtl.supabase.co',
+  'sb_publishable_gFH47heYn40CYbU1xeB2Sw_cssRm_hT'
+);
+</script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F7F4EF;
+  --bg2:#EFEAE0;
+  --white:#FFFDF8;
+  --brown:#6B4C2A;
+  --brown-deep:#3C2410;
+  --brown-pale:#C4A882;
+  --green:#5C7A4E;
+  --green-light:#8FAB7F;
+  --green-pale:#D4E4C8;
+  --red:#C0392B;
+  --red-pale:#FDECEA;
+  --text:#2C1F0E;
+  --text2:#5A3E22;
+  --text3:#8B6A4A;
+  --border:#DDD0BC;
+  --shadow:0 2px 12px rgba(107,76,42,0.08);
+  --shadow-md:0 6px 24px rgba(107,76,42,0.12);
+  --r:10px;
+  --r-lg:16px;
+  --sidebar:220px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+/* ── LOGIN ── */
+#login-screen{
+  position:fixed;inset:0;background:var(--brown-deep);
+  display:flex;align-items:center;justify-content:center;z-index:999;
+}
+.login-box{
+  background:var(--white);border-radius:20px;padding:2.5rem 2rem;
+  width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.3);
+}
+.login-logo{
+  font-family:'Noto Serif TC',serif;font-size:20px;font-weight:700;
+  color:var(--brown);text-align:center;margin-bottom:0.3rem;
+}
+.login-sub{font-size:12px;color:var(--text3);text-align:center;margin-bottom:2rem;letter-spacing:0.08em;}
+.login-label{font-size:12px;color:var(--text2);margin-bottom:0.4rem;display:block;font-weight:500;}
+.login-input{
+  width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r);
+  font-size:14px;font-family:'Noto Sans TC',sans-serif;background:var(--bg);
+  color:var(--text);margin-bottom:1rem;outline:none;transition:border-color 0.2s;
+}
+.login-input:focus{border-color:var(--brown-pale);}
+.login-btn{
+  width:100%;padding:12px;background:var(--brown);color:#FFF8EE;border:none;
+  border-radius:var(--r);font-size:14px;font-weight:500;cursor:pointer;
+  font-family:'Noto Sans TC',sans-serif;transition:background 0.2s;
+}
+.login-btn:hover{background:var(--brown-deep);}
+.login-err{font-size:12px;color:var(--red);margin-top:0.5rem;text-align:center;display:none;}
+
+/* ── LAYOUT ── */
+#app{display:none;min-height:100vh;}
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sidebar);
+  background:var(--brown-deep);display:flex;flex-direction:column;z-index:100;
+}
+.sidebar-logo{
+  padding:1.5rem 1.2rem 1rem;border-bottom:1px solid rgba(255,248,238,0.1);
+}
+.sidebar-logo-main{
+  font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;
+  color:#FFF8EE;line-height:1.4;
+}
+.sidebar-logo-sub{font-size:10px;color:rgba(255,248,238,0.4);letter-spacing:0.1em;margin-top:2px;}
+.sidebar-nav{flex:1;padding:1rem 0;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:10px 1.2rem;
+  font-size:13px;color:rgba(255,248,238,0.65);cursor:pointer;
+  transition:all 0.15s;border-left:3px solid transparent;
+}
+.nav-item:hover{color:#FFF8EE;background:rgba(255,248,238,0.06);}
+.nav-item.active{color:#FFF8EE;background:rgba(255,248,238,0.1);border-left-color:var(--green-light);}
+.nav-icon{font-size:16px;width:20px;text-align:center;}
+.sidebar-footer{padding:1rem 1.2rem;border-top:1px solid rgba(255,248,238,0.1);}
+.logout-btn{
+  width:100%;padding:8px;background:rgba(255,248,238,0.08);border:1px solid rgba(255,248,238,0.15);
+  border-radius:var(--r);font-size:12px;color:rgba(255,248,238,0.6);cursor:pointer;
+  font-family:'Noto Sans TC',sans-serif;transition:all 0.2s;
+}
+.logout-btn:hover{background:rgba(255,248,238,0.14);color:#FFF8EE;}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar);min-height:100vh;display:flex;flex-direction:column;}
+.topbar{
+  background:var(--white);border-bottom:1px solid var(--border);
+  padding:0 2rem;height:56px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:50;
+}
+.topbar-title{font-family:'Noto Serif TC',serif;font-size:16px;font-weight:700;color:var(--brown);}
+.topbar-user{font-size:12px;color:var(--text3);}
+.content{padding:2rem;flex:1;}
+
+/* ── TABS ── */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── CARDS / STATS ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+.stat-card{background:var(--white);border-radius:var(--r-lg);padding:1.2rem 1.5rem;border:1px solid var(--border);}
+.stat-num{font-family:'Noto Serif TC',serif;font-size:2rem;font-weight:700;color:var(--brown);display:block;}
+.stat-label{font-size:12px;color:var(--text3);margin-top:4px;}
+
+/* ── TABLE ── */
+.table-wrap{background:var(--white);border-radius:var(--r-lg);border:1px solid var(--border);overflow:hidden;}
+.table-header{
+  padding:1rem 1.5rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.table-title{font-size:14px;font-weight:500;color:var(--brown);}
+table{width:100%;border-collapse:collapse;}
+th{
+  background:var(--bg);font-size:11px;font-weight:500;color:var(--text3);
+  letter-spacing:0.08em;text-transform:uppercase;padding:10px 1rem;
+  text-align:left;border-bottom:1px solid var(--border);
+}
+td{padding:12px 1rem;font-size:13px;color:var(--text2);border-bottom:1px solid var(--bg2);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--bg);}
+.cat-thumb{width:40px;height:40px;border-radius:8px;object-fit:cover;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.cat-thumb img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
+
+/* ── STATUS BADGES ── */
+.badge{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:500;display:inline-block;}
+.badge-waiting{background:#FFF3CD;color:#856404;}
+.badge-adopted{background:var(--green-pale);color:#2D5A1B;}
+.badge-care{background:#D0E8FF;color:#0C447C;}
+.badge-pending{background:#FFF3CD;color:#856404;}
+.badge-approved{background:var(--green-pale);color:#2D5A1B;}
+.badge-rejected{background:var(--red-pale);color:var(--red);}
+
+/* ── BUTTONS ── */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 16px;border-radius:var(--r);font-size:13px;
+  font-weight:500;cursor:pointer;border:none;
+  font-family:'Noto Sans TC',sans-serif;transition:all 0.15s;
+}
+.btn-primary{background:var(--brown);color:#FFF8EE;}
+.btn-primary:hover{background:var(--brown-deep);}
+.btn-green{background:var(--green);color:#fff;}
+.btn-green:hover{background:var(--green-light);}
+.btn-sm{padding:5px 12px;font-size:12px;}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text2);}
+.btn-ghost:hover{background:var(--bg2);}
+.btn-danger{background:var(--red-pale);color:var(--red);border:1px solid #f5c6c2;}
+.btn-danger:hover{background:#f5c6c2;}
+.btn-row{display:flex;gap:6px;}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(44,31,14,0.5);
+  z-index:500;display:none;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--white);border-radius:20px;width:100%;max-width:560px;
+  max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-md);
+}
+.modal-head{
+  padding:1.5rem 1.5rem 1rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:var(--white);z-index:1;
+}
+.modal-title{font-family:'Noto Serif TC',serif;font-size:16px;font-weight:700;color:var(--brown);}
+.modal-close{
+  width:28px;height:28px;border-radius:50%;background:var(--bg2);border:none;
+  cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;
+  color:var(--text3);transition:background 0.15s;
+}
+.modal-close:hover{background:var(--border);}
+.modal-body{padding:1.5rem;}
+.modal-foot{
+  padding:1rem 1.5rem;border-top:1px solid var(--border);
+  display:flex;justify-content:flex-end;gap:0.75rem;
+  position:sticky;bottom:0;background:var(--white);
+}
+
+/* ── FORM ── */
+.form-row{margin-bottom:1rem;}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+label{font-size:12px;font-weight:500;color:var(--text2);display:block;margin-bottom:0.4rem;}
+input[type=text],input[type=email],input[type=tel],select,textarea{
+  width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r);
+  font-size:13px;font-family:'Noto Sans TC',sans-serif;background:var(--bg);
+  color:var(--text);outline:none;transition:border-color 0.2s;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--brown-pale);}
+textarea{resize:vertical;min-height:80px;}
+select{cursor:pointer;}
+
+/* ── UPLOAD ── */
+.upload-area{
+  border:2px dashed var(--border);border-radius:var(--r-lg);
+  padding:2rem;text-align:center;cursor:pointer;transition:all 0.2s;
+  background:var(--bg);position:relative;
+}
+.upload-area:hover{border-color:var(--brown-pale);background:var(--bg2);}
+.upload-area input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-icon{font-size:32px;margin-bottom:0.5rem;}
+.upload-text{font-size:13px;color:var(--text3);}
+.upload-preview{width:100%;height:160px;object-fit:cover;border-radius:var(--r);margin-top:1rem;display:none;}
+
+/* ── EMPTY STATE ── */
+.empty{padding:3rem;text-align:center;color:var(--text3);}
+.empty-icon{font-size:40px;margin-bottom:0.8rem;}
+.empty-text{font-size:14px;}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:2rem;right:2rem;background:var(--brown-deep);color:#FFF8EE;
+  padding:12px 20px;border-radius:var(--r-lg);font-size:13px;
+  box-shadow:var(--shadow-md);z-index:999;transform:translateY(80px);
+  transition:transform 0.3s ease;pointer-events:none;
+}
+.toast.show{transform:translateY(0);}
+.toast.success{background:var(--green);}
+.toast.error{background:var(--red);}
+
+/* ── LOADING ── */
+.loading{text-align:center;padding:2rem;color:var(--text3);font-size:13px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">，逗點浪貓關懷協會</div>
+    <div class="login-sub">彰化縣 · 後台管理系統</div>
+    <label class="login-label">管理員 Email</label>
+    <input type="email" id="login-email" class="login-input" placeholder="admin@example.com">
+    <label class="login-label">密碼</label>
+    <input type="password" id="login-pwd" class="login-input" placeholder="••••••••">
+    <button class="login-btn" onclick="doLogin()">登入</button>
+    <div class="login-err" id="login-err">Email 或密碼錯誤，請再試一次。</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-main">，逗點浪貓關懷協會</div>
+      <div class="sidebar-logo-sub">後台管理系統</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="showPage('dashboard')">
+        <span class="nav-icon">📊</span> 總覽
+      </div>
+      <div class="nav-item" onclick="showPage('cats')">
+        <span class="nav-icon">🐱</span> 貓咪管理
+      </div>
+      <div class="nav-item" onclick="showPage('adoptions')">
+        <span class="nav-icon">🏡</span> 送養申請
+      </div>
+      <div class="nav-item" onclick="showPage('volunteers')">
+        <span class="nav-icon">🤝</span> 志工登記
+      </div>
+      <div class="nav-item" onclick="showPage('registrations')">
+        <span class="nav-icon">📧</span> 意願登記
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="doLogout()">登出</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="page-title">總覽</div>
+      <div class="topbar-user" id="topbar-user"></div>
+    </div>
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="stats-row">
+          <div class="stat-card">
+            <span class="stat-num" id="stat-cats">—</span>
+            <div class="stat-label">🐱 貓咪總數</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="stat-waiting">—</span>
+            <div class="stat-label">⏳ 待送養</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="stat-adoptions">—</span>
+            <div class="stat-label">🏡 送養申請</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="stat-volunteers">—</span>
+            <div class="stat-label">🤝 志工登記</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-header">
+            <div class="table-title">最新送養申請</div>
+            <button class="btn btn-ghost btn-sm" onclick="showPage('adoptions')">查看全部</button>
+          </div>
+          <div id="dashboard-adoptions"><div class="loading">載入中...</div></div>
+        </div>
+      </div>
+
+      <!-- CATS -->
+      <div class="page" id="page-cats">
+        <div class="table-wrap">
+          <div class="table-header">
+            <div class="table-title">貓咪列表</div>
+            <button class="btn btn-primary" onclick="openCatModal()">＋ 新增貓咪</button>
+          </div>
+          <div id="cats-table"><div class="loading">載入中...</div></div>
+        </div>
+      </div>
+
+      <!-- ADOPTIONS -->
+      <div class="page" id="page-adoptions">
+        <div class="table-wrap">
+          <div class="table-header">
+            <div class="table-title">送養申請列表</div>
+          </div>
+          <div id="adoptions-table"><div class="loading">載入中...</div></div>
+        </div>
+      </div>
+
+      <!-- VOLUNTEERS -->
+      <div class="page" id="page-volunteers">
+        <div class="table-wrap">
+          <div class="table-header">
+            <div class="table-title">志工登記列表</div>
+          </div>
+          <div id="volunteers-table"><div class="loading">載入中...</div></div>
+        </div>
+      </div>
+
+      <!-- REGISTRATIONS -->
+      <div class="page" id="page-registrations">
+        <div class="table-wrap">
+          <div class="table-header">
+            <div class="table-title">Email 意願登記</div>
+            <span class="table-title" id="reg-count" style="font-size:12px;color:var(--text3);"></span>
+          </div>
+          <div id="reg-table"><div class="loading">載入中...</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CAT MODAL -->
+<div class="modal-overlay" id="cat-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="cat-modal-title">新增貓咪</div>
+      <button class="modal-close" onclick="closeCatModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="cat-id">
+      <div class="form-row">
+        <label>貓咪照片</label>
+        <div class="upload-area" id="upload-area">
+          <input type="file" id="cat-photo-file" accept="image/*" onchange="previewPhoto(this)">
+          <div class="upload-icon">📷</div>
+          <div class="upload-text">點擊或拖曳上傳照片<br><small>JPG / PNG，建議 1:1 比例</small></div>
+          <img class="upload-preview" id="photo-preview">
+        </div>
+        <input type="hidden" id="cat-photo-url">
+      </div>
+      <div class="form-row-2">
+        <div>
+          <label>貓咪名字 *</label>
+          <input type="text" id="cat-name" placeholder="例：吉吉">
+        </div>
+        <div>
+          <label>性別</label>
+          <select id="cat-gender">
+            <option value="未知">未知</option>
+            <option value="公">公</option>
+            <option value="母">母</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row-2">
+        <div>
+          <label>狀態</label>
+          <select id="cat-status">
+            <option value="待送養">待送養</option>
+            <option value="送養中">送養中</option>
+            <option value="已送養">已送養</option>
+            <option value="照護中">照護中</option>
+            <option value="過彩虹橋">過彩虹橋</option>
+          </select>
+        </div>
+        <div>
+          <label>毛色</label>
+          <input type="text" id="cat-color" placeholder="例：黑色、橘白">
+        </div>
+      </div>
+      <div class="form-row-2">
+        <div>
+          <label>年齡估計</label>
+          <input type="text" id="cat-age" placeholder="例：約 2 歲">
+        </div>
+        <div>
+          <label>個性</label>
+          <input type="text" id="cat-personality" placeholder="例：親人、怕生">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>故事介紹</label>
+        <textarea id="cat-story" placeholder="這隻貓的故事..."></textarea>
+      </div>
+      <div class="form-row">
+        <label>醫療記錄</label>
+        <textarea id="cat-medical" placeholder="疫苗、絕育、病史..."></textarea>
+      </div>
+      <div class="form-row-2">
+        <div>
+          <label>已接種疫苗</label>
+          <select id="cat-vaccinated">
+            <option value="false">否</option>
+            <option value="true">是</option>
+          </select>
+        </div>
+        <div>
+          <label>已絕育</label>
+          <select id="cat-neutered">
+            <option value="false">否</option>
+            <option value="true">是</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeCatModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveCat()" id="save-cat-btn">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADOPTION DETAIL MODAL -->
+<div class="modal-overlay" id="adoption-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">送養申請詳情</div>
+      <button class="modal-close" onclick="closeModal('adoption-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="adoption-detail"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('adoption-modal')">關閉</button>
+      <button class="btn btn-danger btn-sm" onclick="updateAdoptionStatus('婉拒')">婉拒</button>
+      <button class="btn btn-green btn-sm" onclick="updateAdoptionStatus('通過')">通過申請</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════
+   AUTH
+═══════════════════════════ */
+let currentUser = null;
+let currentAdoptionId = null;
+
+async function doLogin(){
+  var email = document.getElementById('login-email').value.trim();
+  var pwd = document.getElementById('login-pwd').value;
+  var err = document.getElementById('login-err');
+  err.style.display = 'none';
+  var btn = document.querySelector('.login-btn');
+  btn.textContent = '登入中...'; btn.disabled = true;
+  try{
+    var res = await _sb.auth.signInWithPassword({email, password: pwd});
+    if(res.error) throw res.error;
+    currentUser = res.data.user;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('topbar-user').textContent = currentUser.email;
+    loadDashboard();
+  }catch(e){
+    err.style.display = 'block';
+  }finally{
+    btn.textContent = '登入'; btn.disabled = false;
+  }
+}
+
+document.getElementById('login-pwd').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+async function doLogout(){
+  await _sb.auth.signOut();
+  location.reload();
+}
+
+/* ═══════════════════════════
+   NAVIGATION
+═══════════════════════════ */
+const pageTitles = {dashboard:'總覽',cats:'貓咪管理',adoptions:'送養申請',volunteers:'志工登記',registrations:'意願登記'};
+
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    if(n.getAttribute('onclick').includes("'"+name+"'")) n.classList.add('active');
+  });
+  document.getElementById('page-title').textContent = pageTitles[name];
+  if(name==='dashboard') loadDashboard();
+  if(name==='cats') loadCats();
+  if(name==='adoptions') loadAdoptions();
+  if(name==='volunteers') loadVolunteers();
+  if(name==='registrations') loadRegistrations();
+}
+
+/* ═══════════════════════════
+   TOAST
+═══════════════════════════ */
+function showToast(msg, type=''){
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show ' + type;
+  setTimeout(()=>t.className='toast', 2800);
+}
+
+/* ═══════════════════════════
+   MODAL HELPERS
+═══════════════════════════ */
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+/* ═══════════════════════════
+   DASHBOARD
+═══════════════════════════ */
+async function loadDashboard(){
+  var [cats, adoptions, volunteers] = await Promise.all([
+    _sb.from('cats').select('id,status'),
+    _sb.from('adoption_requests').select('id,applicant_name,cat_name,status,created_at').order('created_at',{ascending:false}).limit(5),
+    _sb.from('volunteers').select('id'),
+  ]);
+  var allCats = cats.data || [];
+  document.getElementById('stat-cats').textContent = allCats.length;
+  document.getElementById('stat-waiting').textContent = allCats.filter(c=>c.status==='待送養').length;
+  document.getElementById('stat-adoptions').textContent = (adoptions.data||[]).length;
+  document.getElementById('stat-volunteers').textContent = (volunteers.data||[]).length;
+
+  var list = adoptions.data || [];
+  if(!list.length){
+    document.getElementById('dashboard-adoptions').innerHTML = '<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">目前沒有送養申請</div></div>';
+    return;
+  }
+  document.getElementById('dashboard-adoptions').innerHTML =
+    '<table><thead><tr><th>申請人</th><th>貓咪</th><th>狀態</th><th>時間</th></tr></thead><tbody>'
+    + list.map(a=>'<tr><td>'+a.applicant_name+'</td><td>'+(a.cat_name||'—')+'</td><td>'+badgeHtml(a.status)+'</td><td>'+fmtDate(a.created_at)+'</td></tr>').join('')
+    + '</tbody></table>';
+}
+
+/* ═══════════════════════════
+   CATS
+═══════════════════════════ */
+async function loadCats(){
+  var res = await _sb.from('cats').select('*').order('created_at',{ascending:false});
+  var list = res.data || [];
+  if(!list.length){
+    document.getElementById('cats-table').innerHTML = '<div class="empty"><div class="empty-icon">🐱</div><div class="empty-text">還沒有貓咪資料，點上方「新增貓咪」開始</div></div>';
+    return;
+  }
+  document.getElementById('cats-table').innerHTML =
+    '<table><thead><tr><th>照片</th><th>名字</th><th>性別</th><th>狀態</th><th>毛色</th><th>建立時間</th><th>操作</th></tr></thead><tbody>'
+    + list.map(c=>`<tr>
+      <td><div class="cat-thumb">${c.photo_url?'<img src="'+c.photo_url+'" alt="'+c.name+'">':'🐱'}</div></td>
+      <td><strong>${c.name}</strong></td>
+      <td>${c.gender||'—'}</td>
+      <td>${badgeHtml(c.status)}</td>
+      <td>${c.color||'—'}</td>
+      <td>${fmtDate(c.created_at)}</td>
+      <td><div class="btn-row">
+        <button class="btn btn-ghost btn-sm" onclick='editCat(${JSON.stringify(c)})'>編輯</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCat('${c.id}','${c.name}')">刪除</button>
+      </div></td>
+    </tr>`).join('')
+    + '</tbody></table>';
+}
+
+function openCatModal(cat){
+  document.getElementById('cat-modal-title').textContent = cat ? '編輯貓咪' : '新增貓咪';
+  document.getElementById('cat-id').value = cat ? cat.id : '';
+  document.getElementById('cat-name').value = cat ? cat.name : '';
+  document.getElementById('cat-gender').value = cat ? (cat.gender||'未知') : '未知';
+  document.getElementById('cat-status').value = cat ? (cat.status||'待送養') : '待送養';
+  document.getElementById('cat-color').value = cat ? (cat.color||'') : '';
+  document.getElementById('cat-age').value = cat ? (cat.age_estimate||'') : '';
+  document.getElementById('cat-personality').value = cat ? (cat.personality||'') : '';
+  document.getElementById('cat-story').value = cat ? (cat.story||'') : '';
+  document.getElementById('cat-medical').value = cat ? (cat.medical_notes||'') : '';
+  document.getElementById('cat-vaccinated').value = cat ? String(cat.vaccinated||false) : 'false';
+  document.getElementById('cat-neutered').value = cat ? String(cat.neutered||false) : 'false';
+  document.getElementById('cat-photo-url').value = cat ? (cat.photo_url||'') : '';
+  var prev = document.getElementById('photo-preview');
+  if(cat && cat.photo_url){ prev.src = cat.photo_url; prev.style.display='block'; }
+  else { prev.src=''; prev.style.display='none'; }
+  document.getElementById('cat-photo-file').value = '';
+  document.getElementById('cat-modal').classList.add('open');
+}
+
+function editCat(cat){ openCatModal(cat); }
+function closeCatModal(){ document.getElementById('cat-modal').classList.remove('open'); }
+
+function previewPhoto(input){
+  var file = input.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = e => {
+    var prev = document.getElementById('photo-preview');
+    prev.src = e.target.result; prev.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveCat(){
+  var name = document.getElementById('cat-name').value.trim();
+  if(!name){ showToast('請填入貓咪名字','error'); return; }
+  var btn = document.getElementById('save-cat-btn');
+  btn.textContent = '儲存中...'; btn.disabled = true;
+  try{
+    // Upload photo if selected
+    var photoUrl = document.getElementById('cat-photo-url').value;
+    var file = document.getElementById('cat-photo-file').files[0];
+    if(file){
+      var ext = file.name.split('.').pop();
+      var path = 'cat-'+Date.now()+'.'+ext;
+      var up = await _sb.storage.from('cat-photos').upload(path, file, {upsert:true});
+      if(up.error) throw up.error;
+      var pub = _sb.storage.from('cat-photos').getPublicUrl(path);
+      photoUrl = pub.data.publicUrl;
+    }
+
+    var payload = {
+      name,
+      gender: document.getElementById('cat-gender').value,
+      status: document.getElementById('cat-status').value,
+      color: document.getElementById('cat-color').value,
+      age_estimate: document.getElementById('cat-age').value,
+      personality: document.getElementById('cat-personality').value,
+      story: document.getElementById('cat-story').value,
+      medical_notes: document.getElementById('cat-medical').value,
+      vaccinated: document.getElementById('cat-vaccinated').value === 'true',
+      neutered: document.getElementById('cat-neutered').value === 'true',
+      photo_url: photoUrl || null,
+    };
+
+    var id = document.getElementById('cat-id').value;
+    var res = id
+      ? await _sb.from('cats').update(payload).eq('id', id)
+      : await _sb.from('cats').insert(payload);
+
+    if(res.error) throw res.error;
+    showToast(id ? '更新成功 🐱' : '新增成功 🐱', 'success');
+    closeCatModal();
+    loadCats();
+  }catch(e){
+    showToast('儲存失敗：'+e.message, 'error');
+  }finally{
+    btn.textContent = '儲存'; btn.disabled = false;
+  }
+}
+
+async function deleteCat(id, name){
+  if(!confirm('確定要刪除「'+name+'」嗎？此操作無法復原。')) return;
+  var res = await _sb.from('cats').delete().eq('id', id);
+  if(res.error){ showToast('刪除失敗','error'); return; }
+  showToast('已刪除 '+name, 'success');
+  loadCats();
+}
+
+/* ═══════════════════════════
+   ADOPTIONS
+═══════════════════════════ */
+async function loadAdoptions(){
+  var res = await _sb.from('adoption_requests').select('*').order('created_at',{ascending:false});
+  var list = res.data || [];
+  if(!list.length){
+    document.getElementById('adoptions-table').innerHTML = '<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">目前沒有送養申請</div></div>';
+    return;
+  }
+  document.getElementById('adoptions-table').innerHTML =
+    '<table><thead><tr><th>申請人</th><th>Email</th><th>貓咪</th><th>狀態</th><th>時間</th><th>詳情</th></tr></thead><tbody>'
+    + list.map(a=>`<tr>
+      <td><strong>${a.applicant_name}</strong></td>
+      <td>${a.email}</td>
+      <td>${a.cat_name||'—'}</td>
+      <td>${badgeHtml(a.status)}</td>
+      <td>${fmtDate(a.created_at)}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick='viewAdoption(${JSON.stringify(a)})'>查看</button></td>
+    </tr>`).join('')
+    + '</tbody></table>';
+}
+
+function viewAdoption(a){
+  currentAdoptionId = a.id;
+  document.getElementById('adoption-detail').innerHTML = `
+    <div class="form-row-2">
+      <div><label>申請人</label><p>${a.applicant_name}</p></div>
+      <div><label>電話</label><p>${a.phone||'—'}</p></div>
+    </div>
+    <div class="form-row"><label>Email</label><p>${a.email}</p></div>
+    <div class="form-row-2">
+      <div><label>申請貓咪</label><p>${a.cat_name||'—'}</p></div>
+      <div><label>居住類型</label><p>${a.housing_type||'—'}</p></div>
+    </div>
+    <div class="form-row"><label>有無其他寵物</label><p>${a.has_other_pets?'有':'無'}</p></div>
+    <div class="form-row"><label>養貓經驗</label><p>${a.experience||'—'}</p></div>
+    <div class="form-row"><label>申請原因</label><p>${a.motivation||'—'}</p></div>
+    <div class="form-row"><label>目前狀態</label>${badgeHtml(a.status)}</div>
+    <div class="form-row"><label>管理員備註</label><textarea id="adoption-notes" placeholder="填寫備註...">${a.admin_notes||''}</textarea></div>
+  `;
+  document.getElementById('adoption-modal').classList.add('open');
+}
+
+async function updateAdoptionStatus(status){
+  var notes = document.getElementById('adoption-notes').value;
+  var res = await _sb.from('adoption_requests').update({status, admin_notes: notes}).eq('id', currentAdoptionId);
+  if(res.error){ showToast('更新失敗','error'); return; }
+  showToast('狀態已更新為「'+status+'」','success');
+  closeModal('adoption-modal');
+  loadAdoptions();
+}
+
+/* ═══════════════════════════
+   VOLUNTEERS
+═══════════════════════════ */
+async function loadVolunteers(){
+  var res = await _sb.from('volunteers').select('*').order('created_at',{ascending:false});
+  var list = res.data || [];
+  if(!list.length){
+    document.getElementById('volunteers-table').innerHTML = '<div class="empty"><div class="empty-icon">🤝</div><div class="empty-text">目前沒有志工登記</div></div>';
+    return;
+  }
+  document.getElementById('volunteers-table').innerHTML =
+    '<table><thead><tr><th>姓名</th><th>Email</th><th>電話</th><th>專長</th><th>狀態</th><th>時間</th><th>操作</th></tr></thead><tbody>'
+    + list.map(v=>`<tr>
+      <td><strong>${v.name}</strong></td>
+      <td>${v.email}</td>
+      <td>${v.phone||'—'}</td>
+      <td>${v.skills||'—'}</td>
+      <td>
+        <select class="vol-status-sel" style="width:auto;padding:4px 8px;font-size:12px;" onchange="updateVolStatus('${v.id}',this.value)">
+          ${['待聯繫','已聯繫','活躍','暫停'].map(s=>`<option value="${s}"${v.status===s?' selected':''}>${s}</option>`).join('')}
+        </select>
+      </td>
+      <td>${fmtDate(v.created_at)}</td>
+      <td><a href="mailto:${v.email}" class="btn btn-ghost btn-sm">寄信</a></td>
+    </tr>`).join('')
+    + '</tbody></table>';
+}
+
+async function updateVolStatus(id, status){
+  await _sb.from('volunteers').update({status}).eq('id',id);
+  showToast('狀態已更新','success');
+}
+
+/* ═══════════════════════════
+   REGISTRATIONS
+═══════════════════════════ */
+async function loadRegistrations(){
+  var res = await _sb.from('registrations').select('*').order('created_at',{ascending:false});
+  var list = res.data || [];
+  document.getElementById('reg-count').textContent = '共 '+list.length+' 筆';
+  if(!list.length){
+    document.getElementById('reg-table').innerHTML = '<div class="empty"><div class="empty-icon">📧</div><div class="empty-text">目前沒有意願登記</div></div>';
+    return;
+  }
+  document.getElementById('reg-table').innerHTML =
+    '<table><thead><tr><th>Email</th><th>類型</th><th>登記時間</th><th></th></tr></thead><tbody>'
+    + list.map(r=>`<tr>
+      <td>${r.email}</td>
+      <td><span class="badge badge-waiting">${r.type}</span></td>
+      <td>${fmtDate(r.created_at)}</td>
+      <td><a href="mailto:${r.email}" class="btn btn-ghost btn-sm">寄信</a></td>
+    </tr>`).join('')
+    + '</tbody></table>';
+}
+
+/* ═══════════════════════════
+   HELPERS
+═══════════════════════════ */
+function badgeHtml(status){
+  var map = {
+    '待送養':'badge-waiting','送養中':'badge-waiting','已送養':'badge-adopted',
+    '照護中':'badge-care','過彩虹橋':'badge-care',
+    '待審核':'badge-pending','審核中':'badge-pending',
+    '通過':'badge-approved','婉拒':'badge-rejected',
+    '待聯繫':'badge-pending','已聯繫':'badge-waiting','活躍':'badge-approved','暫停':'badge-rejected'
+  };
+  return '<span class="badge '+(map[status]||'badge-pending')+'">'+status+'</span>';
+}
+
+function fmtDate(s){
+  if(!s) return '—';
+  var d = new Date(s);
+  return d.getFullYear()+'/'+(d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getDate().toString().padStart(2,'0');
+}
+
+/* ═══════════════════════════
+   SESSION CHECK
+═══════════════════════════ */
+(async()=>{
+  var {data:{session}} = await _sb.auth.getSession();
+  if(session){
+    currentUser = session.user;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('topbar-user').textContent = currentUser.email;
+    loadDashboard();
+  }
+})();
+</script>
+</body>
+</html>
