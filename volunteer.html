@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>志工登記 — 彰化縣逗點浪貓關懷協會</title>
+<meta name="description" content="加入逗點浪貓關懷協會志工團隊，一起為浪貓的生命留下逗點。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const _sb = window.supabase.createClient(
+  'https://jztxmetatuufhfitjqtl.supabase.co',
+  'sb_publishable_gFH47heYn40CYbU1xeB2Sw_cssRm_hT'
+);
+</script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#FAF6EE;
+  --cream-dark:#F0E8D8;
+  --cream-mid:#E8DCC8;
+  --brown:#6B4C2A;
+  --brown-light:#9B7B5A;
+  --brown-pale:#C4A882;
+  --brown-deep:#3C2410;
+  --green:#5C7A4E;
+  --green-light:#8FAB7F;
+  --green-pale:#D4E4C8;
+  --text-dark:#2C1F0E;
+  --text-mid:#5A3E22;
+  --text-light:#8B6A4A;
+  --text-muted:#B09070;
+  --white:#FFFDF8;
+  --shadow-sm:0 2px 12px rgba(107,76,42,0.08);
+  --shadow-md:0 8px 32px rgba(107,76,42,0.12);
+  --r:10px;--r-lg:16px;--r-xl:24px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--cream);color:var(--text-dark);}
+a{text-decoration:none;transition:all 0.2s;}
+
+/* NAV */
+nav{
+  background:rgba(250,246,238,0.96);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--cream-dark);position:sticky;top:0;z-index:100;
+}
+.nav-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;max-width:1000px;margin:0 auto;padding:0 2rem;
+}
+.nav-logo{display:flex;align-items:center;gap:8px;}
+.logo-comma{font-family:'Noto Serif TC',serif;font-size:32px;font-weight:700;color:var(--green);line-height:1;}
+.logo-text{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--brown);}
+.logo-text small{display:block;font-size:10px;font-family:'Noto Sans TC',sans-serif;font-weight:400;color:var(--text-muted);letter-spacing:0.1em;}
+.nav-back{
+  display:flex;align-items:center;gap:6px;font-size:13px;
+  color:var(--text-light);border:1px solid var(--cream-mid);
+  padding:7px 16px;border-radius:20px;
+}
+.nav-back:hover{border-color:var(--brown-pale);color:var(--brown);}
+
+/* HERO */
+.vol-hero{
+  background:var(--brown-deep);padding:4rem 2rem;text-align:center;
+  position:relative;overflow:hidden;
+}
+.vol-hero::before{
+  content:'，';font-family:'Noto Serif TC',serif;font-size:300px;
+  color:rgba(255,248,238,0.04);position:absolute;right:-20px;top:-60px;
+  line-height:1;pointer-events:none;
+}
+.vol-hero-tag{
+  font-size:11px;color:var(--green-light);letter-spacing:0.2em;
+  text-transform:uppercase;margin-bottom:1rem;display:block;
+}
+.vol-hero h1{
+  font-family:'Noto Serif TC',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);
+  font-weight:700;color:#FFF8EE;line-height:1.5;margin-bottom:1rem;
+}
+.vol-hero h1 em{font-style:normal;color:var(--green-light);}
+.vol-hero p{
+  font-size:15px;color:rgba(255,248,238,0.7);line-height:2;
+  max-width:500px;margin:0 auto 2rem;
+}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.btn-light{
+  background:#FFF8EE;color:var(--brown);padding:12px 28px;
+  border-radius:24px;font-size:14px;font-weight:500;
+  transition:all 0.2s;display:inline-block;
+}
+.btn-light:hover{background:var(--cream-dark);transform:translateY(-2px);}
+.btn-outline-light{
+  border:1.5px solid rgba(255,248,238,0.4);color:rgba(255,248,238,0.9);
+  padding:12px 28px;border-radius:24px;font-size:14px;
+  transition:all 0.2s;display:inline-block;
+}
+.btn-outline-light:hover{border-color:#FFF8EE;color:#FFF8EE;}
+
+/* SKILLS SECTION */
+.skills-section{padding:4rem 2rem;max-width:1000px;margin:0 auto;}
+.section-header{text-align:center;margin-bottom:3rem;}
+.section-tag{font-size:11px;color:var(--green);letter-spacing:0.2em;font-weight:500;text-transform:uppercase;margin-bottom:0.6rem;display:block;}
+.section-title{font-family:'Noto Serif TC',serif;font-size:clamp(1.4rem,2.5vw,2rem);font-weight:700;color:var(--brown);line-height:1.5;}
+.skills-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+.skill-card{
+  background:var(--white);border-radius:var(--r-lg);padding:1.5rem 1rem;
+  text-align:center;border:1px solid rgba(180,150,110,0.15);
+  transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;
+  cursor:pointer;
+}
+.skill-card:hover,.skill-card.selected{
+  transform:translateY(-4px);box-shadow:var(--shadow-md);
+  border-color:var(--green);
+}
+.skill-card.selected{background:var(--green-pale);}
+.skill-icon{font-size:32px;margin-bottom:0.8rem;}
+.skill-name{font-size:13px;font-weight:500;color:var(--brown);margin-bottom:0.3rem;}
+.skill-desc{font-size:12px;color:var(--text-light);line-height:1.6;}
+.skill-check{
+  width:20px;height:20px;border-radius:50%;background:var(--green);
+  color:#fff;font-size:11px;margin:0.6rem auto 0;
+  display:none;align-items:center;justify-content:center;
+}
+.skill-card.selected .skill-check{display:flex;}
+
+/* FORM SECTION */
+.form-section{
+  background:var(--cream-dark);padding:4rem 2rem;
+}
+.form-inner{max-width:640px;margin:0 auto;}
+.form-card{
+  background:var(--white);border-radius:var(--r-xl);padding:2.5rem;
+  box-shadow:var(--shadow-md);border:1px solid rgba(180,150,110,0.15);
+}
+.form-title{
+  font-family:'Noto Serif TC',serif;font-size:20px;font-weight:700;
+  color:var(--brown);margin-bottom:0.4rem;
+}
+.form-subtitle{font-size:13px;color:var(--text-light);margin-bottom:2rem;line-height:1.7;}
+.form-row{margin-bottom:1rem;}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+label{font-size:12px;font-weight:500;color:var(--text-mid);display:block;margin-bottom:0.4rem;}
+input,select,textarea{
+  width:100%;padding:10px 14px;border:1.5px solid var(--cream-mid);
+  border-radius:var(--r);font-size:14px;font-family:'Noto Sans TC',sans-serif;
+  background:var(--cream);color:var(--text-dark);outline:none;transition:border-color 0.2s;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--brown-pale);}
+textarea{resize:vertical;min-height:80px;}
+
+.skills-selected{
+  background:var(--cream);border:1.5px solid var(--cream-mid);
+  border-radius:var(--r);padding:10px 14px;font-size:13px;
+  color:var(--text-muted);min-height:44px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+}
+.skill-pill{
+  background:var(--green-pale);color:var(--green);
+  font-size:12px;padding:3px 10px;border-radius:10px;font-weight:500;
+}
+
+.submit-btn{
+  width:100%;padding:14px;background:var(--brown);color:#FFF8EE;
+  border:none;border-radius:var(--r-xl);font-size:15px;font-weight:500;
+  cursor:pointer;font-family:'Noto Serif TC',serif;
+  transition:all 0.2s;margin-top:0.5rem;letter-spacing:0.06em;
+}
+.submit-btn:hover{background:var(--brown-deep);transform:translateY(-2px);}
+.submit-btn:disabled{background:var(--brown-pale);cursor:not-allowed;transform:none;}
+
+/* SUCCESS */
+.success-state{text-align:center;padding:1rem 0;}
+.success-icon{font-size:64px;margin-bottom:1rem;}
+.success-title{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:700;color:var(--brown);margin-bottom:0.8rem;}
+.success-sub{font-size:14px;color:var(--text-light);line-height:2;}
+
+/* WHY SECTION */
+.why-section{padding:4rem 2rem;max-width:1000px;margin:0 auto;}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.why-card{
+  background:var(--white);border-radius:var(--r-lg);padding:2rem 1.5rem;
+  border:1px solid rgba(180,150,110,0.15);
+}
+.why-num{
+  font-family:'Noto Serif TC',serif;font-size:2.5rem;font-weight:700;
+  color:var(--cream-mid);line-height:1;margin-bottom:0.8rem;
+}
+.why-title{font-size:15px;font-weight:500;color:var(--brown);margin-bottom:0.5rem;}
+.why-text{font-size:13px;color:var(--text-light);line-height:1.8;}
+
+/* FOOTER */
+footer{
+  background:var(--brown-deep);padding:2rem;text-align:center;
+  color:rgba(255,248,238,0.45);font-size:13px;
+}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+  .skills-grid{grid-template-columns:1fr 1fr;}
+  .why-grid{grid-template-columns:1fr;}
+  .form-row-2{grid-template-columns:1fr;}
+  .hero-btns{flex-direction:column;align-items:center;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="logo-comma">，</span>
+      <div class="logo-text">
+        逗點浪貓關懷協會
+        <small>彰化縣</small>
+      </div>
+    </a>
+    <a href="index.html" class="nav-back">← 回首頁</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="vol-hero">
+  <span class="vol-hero-tag">志工招募 · JOIN US</span>
+  <h1>每一位願意伸出手的人，<br>都是牠們生命裡的<em>逗點</em>。</h1>
+  <p>不需要特殊背景，只需要一顆願意的心。<br>找到你能做的那一件事，就是最好的開始。</p>
+  <div class="hero-btns">
+    <a href="#form" class="btn-light">立即登記志工</a>
+    <a href="#skills" class="btn-outline-light">了解志工類型</a>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="skills-section" id="skills">
+  <div class="section-header">
+    <span class="section-tag">志工類型 · Volunteer Types</span>
+    <h2 class="section-title">找到你能做的那一件事</h2>
+  </div>
+  <div class="skills-grid" id="skills-grid">
+    <div class="skill-card" onclick="toggleSkill(this,'捕貓協助')">
+      <div class="skill-icon">🪤</div>
+      <div class="skill-name">捕貓協助</div>
+      <p class="skill-desc">協助設置捕貓籠、現場等待、運送至醫院</p>
+      <div class="skill-check">✓</div>
+    </div>
+    <div class="skill-card" onclick="toggleSkill(this,'醫療陪同')">
+      <div class="skill-icon">🏥</div>
+      <div class="skill-name">醫療陪同</div>
+      <p class="skill-desc">陪同浪貓就醫、術後照護與回置</p>
+      <div class="skill-check">✓</div>
+    </div>
+    <div class="skill-card" onclick="toggleSkill(this,'中途寄養')">
+      <div class="skill-icon">🏡</div>
+      <div class="skill-name">中途寄養</div>
+      <p class="skill-desc">提供家中空間短期照顧待送養的貓咪</p>
+      <div class="skill-check">✓</div>
+    </div>
+    <div class="skill-card" onclick="toggleSkill(this,'攝影記錄')">
+      <div class="skill-icon">📷</div>
+      <div class="skill-name">攝影記錄</div>
+      <p class="skill-desc">為貓咪拍攝送養照片，記錄救援過程</p>
+      <div class="skill-check">✓</div>
+    </div>
+    <div class="skill-card" onclick="toggleSkill(this,'社群經營')">
+      <div class="skill-icon">📱</div>
+      <div class="skill-name">社群經營</div>
+      <p class="skill-desc">協助經營 Facebook、Instagram、LINE</p>
+      <div class="skill-check">✓</div>
+    </div>
+    <div class="skill-card" onclick="toggleSkill(this,'運輸接送')">
+      <div class="skill-icon">🚗</div>
+      <div class="skill-name">運輸接送</div>
+      <p class="skill-desc">提供車輛協助貓咪接送、物資運輸</p>
+      <div class="skill-check">✓</div>
+    </div>
+    <div class="skill-card" onclick="toggleSkill(this,'募款活動')">
+      <div class="skill-icon">💝</div>
+      <div class="skill-name">募款活動</div>
+      <p class="skill-desc">協助規劃活動、義賣、線上募款推廣</p>
+      <div class="skill-check">✓</div>
+    </div>
+    <div class="skill-card" onclick="toggleSkill(this,'其他協助')">
+      <div class="skill-icon">🤝</div>
+      <div class="skill-name">其他協助</div>
+      <p class="skill-desc">有其他想貢獻的能力，歡迎告訴我們</p>
+      <div class="skill-check">✓</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section style="background:var(--cream-dark);padding:4rem 2rem;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div class="section-header">
+      <span class="section-tag">為什麼加入 · Why Join</span>
+      <h2 class="section-title">成為逗點的一部分</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-num">01</div>
+        <div class="why-title">從一件小事開始</div>
+        <p class="why-text">不需要每天都來，不需要樣樣都會。找到一件你能做的事，就已經是很大的幫助了。</p>
+      </div>
+      <div class="why-card">
+        <div class="why-num">02</div>
+        <div class="why-title">看見生命的改變</div>
+        <p class="why-text">親眼看著一隻受傷的貓咪，慢慢恢復健康、找到家庭，那種喜悅是任何東西都換不到的。</p>
+      </div>
+      <div class="why-card">
+        <div class="why-num">03</div>
+        <div class="why-title">成為逗點的夥伴</div>
+        <p class="why-text">你不是一個人在做這件事。逗點的每一位志工都是彼此的支持，也是浪貓生命裡的逗點。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORM -->
+<section class="form-section" id="form">
+  <div class="form-inner">
+    <div class="form-card" id="form-card">
+      <div class="form-title">志工登記表</div>
+      <p class="form-subtitle">
+        填寫以下資料，我們收到後會與你聯繫，說明後續流程。<br>
+        協會籌備中，正式運作後將優先通知已登記的志工。
+      </p>
+
+      <div class="form-row-2">
+        <div>
+          <label>你的姓名 *</label>
+          <input type="text" id="v-name" placeholder="王小明">
+        </div>
+        <div>
+          <label>聯絡電話</label>
+          <input type="tel" id="v-phone" placeholder="0912-345-678">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Email *</label>
+        <input type="email" id="v-email" placeholder="your@email.com">
+      </div>
+
+      <div class="form-row">
+        <label>有興趣的志工類型（可複選，點上方卡片選擇）</label>
+        <div class="skills-selected" id="skills-display">
+          <span style="color:var(--text-muted);font-size:13px;">請點上方卡片選擇...</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>可配合時間</label>
+        <select id="v-availability">
+          <option value="">請選擇</option>
+          <option value="平日白天">平日白天</option>
+          <option value="平日晚上">平日晚上</option>
+          <option value="假日">假日</option>
+          <option value="不固定，視情況">不固定，視情況</option>
+          <option value="線上為主">線上為主（遠端協助）</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label>自我介紹 / 想說的話</label>
+        <textarea id="v-note" placeholder="可以介紹自己、說明有哪些相關經驗，或想對我們說的任何話..."></textarea>
+      </div>
+
+      <button class="submit-btn" onclick="submitVolunteer()" id="vol-submit-btn">
+        提交志工登記 🦋
+      </button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>© 2025 彰化縣逗點浪貓關懷協會（籌備中）</div>
+  <div style="margin-top:0.4rem">讓更多生命，被看見，也被溫柔接住。🦋</div>
+</footer>
+
+<script>
+/* ── 技能選擇 ── */
+var selectedSkills = [];
+
+function toggleSkill(card, skill){
+  var idx = selectedSkills.indexOf(skill);
+  if(idx === -1){
+    selectedSkills.push(skill);
+    card.classList.add('selected');
+  } else {
+    selectedSkills.splice(idx, 1);
+    card.classList.remove('selected');
+  }
+  updateSkillsDisplay();
+}
+
+function updateSkillsDisplay(){
+  var display = document.getElementById('skills-display');
+  if(selectedSkills.length === 0){
+    display.innerHTML = '<span style="color:var(--text-muted);font-size:13px;">請點上方卡片選擇...</span>';
+  } else {
+    display.innerHTML = selectedSkills.map(s =>
+      '<span class="skill-pill">'+s+'</span>'
+    ).join('');
+  }
+}
+
+/* ── 提交志工登記 ── */
+async function submitVolunteer(){
+  var name = document.getElementById('v-name').value.trim();
+  var email = document.getElementById('v-email').value.trim();
+
+  if(!name || !email){
+    alert('請填寫姓名和 Email。');
+    return;
+  }
+
+  var btn = document.getElementById('vol-submit-btn');
+  btn.textContent = '送出中...'; btn.disabled = true;
+
+  try{
+    var res = await _sb.from('volunteers').insert({
+      name: name,
+      email: email,
+      phone: document.getElementById('v-phone').value,
+      skills: selectedSkills.join('、'),
+      availability: document.getElementById('v-availability').value,
+      notes: document.getElementById('v-note').value,
+      status: '待聯繫',
+    });
+
+    if(res.error) throw res.error;
+
+    // 顯示成功畫面
+    document.getElementById('form-card').innerHTML = `
+      <div class="success-state">
+        <div class="success-icon">🦋</div>
+        <div class="success-title">登記成功！</div>
+        <p class="success-sub">
+          謝謝你願意成為逗點的夥伴。<br>
+          我們收到後會盡快與你聯繫，說明後續流程。<br><br>
+          協會正式運作後，你將是第一批被通知的志工。<br><br>
+          讓更多生命，被看見，也被溫柔接住。
+        </p>
+        <br>
+        <a href="index.html" style="display:inline-block;margin-top:0.5rem;color:var(--green);font-size:14px;">← 回首頁</a>
+      </div>
+    `;
+
+  }catch(e){
+    if(e.code === '23505'){
+      alert('這個 Email 已經登記過了！我們會與你聯繫。');
+    } else {
+      alert('送出失敗：' + e.message);
+    }
+    btn.textContent = '提交志工登記 🦋';
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
