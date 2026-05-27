@@ -542,7 +542,7 @@ async function submitAdoption(){
         <button class="btn-ghost" onclick="closeModal()" style="margin-top:0.5rem;">關閉</button>
       </div>`;
   }catch(e){
-    alert('送出失敗，請稍後再試。');
+    alert('送出失敗：' + e.message + ' | ' + JSON.stringify(e));
     btn.textContent = '送出申請'; btn.disabled = false;
   }
 }
