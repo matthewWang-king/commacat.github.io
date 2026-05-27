@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>貓咪故事 — 彰化縣逗點浪貓關懷協會</title>
+<meta name="description" content="每一隻浪貓都有一個值得被說的故事。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const _sb = window.supabase.createClient(
+  'https://jztxmetatuufhfitjqtl.supabase.co',
+  'sb_publishable_gFH47heYn40CYbU1xeB2Sw_cssRm_hT'
+);
+</script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#FAF6EE;
+  --cream-dark:#F0E8D8;
+  --cream-mid:#E8DCC8;
+  --brown:#6B4C2A;
+  --brown-light:#9B7B5A;
+  --brown-pale:#C4A882;
+  --brown-deep:#3C2410;
+  --green:#5C7A4E;
+  --green-light:#8FAB7F;
+  --green-pale:#D4E4C8;
+  --text-dark:#2C1F0E;
+  --text-mid:#5A3E22;
+  --text-light:#8B6A4A;
+  --text-muted:#B09070;
+  --white:#FFFDF8;
+  --shadow-sm:0 2px 12px rgba(107,76,42,0.08);
+  --shadow-md:0 8px 32px rgba(107,76,42,0.12);
+  --r:10px;--r-lg:16px;--r-xl:24px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh;}
+a{text-decoration:none;transition:all 0.2s;}
+
+/* NAV */
+nav{
+  background:rgba(250,246,238,0.96);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--cream-dark);position:sticky;top:0;z-index:100;
+}
+.nav-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;max-width:1000px;margin:0 auto;padding:0 2rem;
+}
+.nav-logo{display:flex;align-items:center;gap:8px;color:var(--brown);}
+.logo-comma{font-family:'Noto Serif TC',serif;font-size:32px;font-weight:700;color:var(--green);line-height:1;}
+.logo-text{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--brown);}
+.logo-text small{display:block;font-size:10px;font-family:'Noto Sans TC',sans-serif;font-weight:400;color:var(--text-muted);letter-spacing:0.1em;}
+.nav-back{
+  display:flex;align-items:center;gap:6px;font-size:13px;
+  color:var(--text-light);border:1px solid var(--cream-mid);
+  padding:7px 16px;border-radius:20px;
+}
+.nav-back:hover{border-color:var(--brown-pale);color:var(--brown);}
+
+/* LOADING / ERROR */
+.center-msg{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:60vh;gap:1rem;
+}
+.center-msg .icon{font-size:48px;}
+.center-msg p{font-size:15px;color:var(--text-light);}
+
+/* HERO */
+.cat-hero{
+  max-width:1000px;margin:0 auto;padding:3rem 2rem 2rem;
+  display:grid;grid-template-columns:1fr 1.2fr;gap:3rem;align-items:start;
+}
+.cat-photo-wrap{position:relative;}
+.cat-photo{
+  width:100%;aspect-ratio:1;border-radius:var(--r-xl);overflow:hidden;
+  background:var(--cream-dark);display:flex;align-items:center;justify-content:center;
+  font-size:100px;box-shadow:var(--shadow-md);
+}
+.cat-photo img{width:100%;height:100%;object-fit:cover;}
+.cat-status-badge{
+  position:absolute;top:16px;right:16px;
+  font-size:12px;font-weight:500;padding:5px 14px;border-radius:14px;
+}
+.status-waiting{background:#FFF3CD;color:#856404;}
+.status-adopted{background:var(--green-pale);color:#2D5A1B;}
+.status-care{background:#D0E8FF;color:#0C447C;}
+
+.cat-info{padding-top:0.5rem;}
+.cat-breadcrumb{font-size:12px;color:var(--text-muted);letter-spacing:0.1em;margin-bottom:1rem;}
+.cat-name{
+  font-family:'Noto Serif TC',serif;font-size:clamp(2rem,4vw,3rem);
+  font-weight:700;color:var(--brown);line-height:1.2;margin-bottom:0.4rem;
+}
+.cat-subtitle{font-size:13px;color:var(--text-muted);letter-spacing:0.1em;margin-bottom:1.5rem;}
+.cat-tags{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:2rem;}
+.cat-tag{
+  background:var(--cream-dark);color:var(--brown-light);
+  font-size:12px;padding:5px 14px;border-radius:14px;
+  border:1px solid rgba(155,123,90,0.25);
+}
+.cat-tag.highlight{background:var(--green-pale);color:var(--green);border-color:rgba(92,122,78,0.25);}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:2rem;}
+.info-item{
+  background:var(--white);border-radius:var(--r-lg);padding:0.9rem 1rem;
+  border:1px solid rgba(180,150,110,0.18);
+}
+.info-label{font-size:10px;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.3rem;}
+.info-value{font-size:14px;font-weight:500;color:var(--brown);}
+
+.adopt-btn{
+  display:block;width:100%;background:var(--brown);color:#FFF8EE;
+  padding:14px;border-radius:var(--r-xl);font-size:15px;font-weight:500;
+  letter-spacing:0.06em;text-align:center;transition:all 0.2s;
+  border:none;cursor:pointer;font-family:'Noto Sans TC',sans-serif;
+}
+.adopt-btn:hover{background:var(--brown-deep);transform:translateY(-2px);}
+.adopt-btn:disabled{background:var(--brown-pale);cursor:not-allowed;transform:none;}
+.share-row{display:flex;gap:0.75rem;margin-top:0.75rem;}
+.share-btn{
+  flex:1;padding:10px;border-radius:var(--r-xl);font-size:13px;
+  border:1.5px solid var(--cream-mid);color:var(--text-mid);
+  background:transparent;cursor:pointer;font-family:'Noto Sans TC',sans-serif;
+  transition:all 0.2s;
+}
+.share-btn:hover{border-color:var(--brown-pale);background:var(--cream-dark);}
+
+/* STORY SECTION */
+.cat-story-section{
+  max-width:1000px;margin:0 auto;padding:0 2rem 4rem;
+}
+.story-card{
+  background:var(--white);border-radius:var(--r-xl);padding:2.5rem;
+  border:1px solid rgba(180,150,110,0.15);margin-bottom:1.5rem;
+  box-shadow:var(--shadow-sm);
+}
+.story-label{
+  font-size:11px;color:var(--green);letter-spacing:0.2em;
+  font-weight:500;text-transform:uppercase;margin-bottom:0.8rem;display:block;
+}
+.story-title{
+  font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;
+  color:var(--brown);margin-bottom:1rem;
+}
+.story-text{font-size:15px;color:var(--text-mid);line-height:2.1;}
+.medical-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.medical-item{
+  background:var(--cream-dark);border-radius:var(--r-lg);padding:1rem;text-align:center;
+}
+.medical-icon{font-size:24px;margin-bottom:0.4rem;}
+.medical-label{font-size:12px;color:var(--text-light);}
+.medical-value{font-size:13px;font-weight:500;color:var(--brown);margin-top:2px;}
+
+/* ADOPTION FORM MODAL */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(44,31,14,0.55);
+  z-index:500;display:none;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--white);border-radius:24px;width:100%;max-width:520px;
+  max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-md);margin:1rem;
+}
+.modal-head{
+  padding:1.5rem 1.5rem 1rem;border-bottom:1px solid var(--cream-dark);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:var(--white);z-index:1;
+}
+.modal-title{font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;color:var(--brown);}
+.modal-close{
+  width:30px;height:30px;border-radius:50%;background:var(--cream-dark);
+  border:none;cursor:pointer;font-size:14px;color:var(--text-light);
+  display:flex;align-items:center;justify-content:center;
+}
+.modal-body{padding:1.5rem;}
+.modal-foot{padding:1rem 1.5rem;border-top:1px solid var(--cream-dark);display:flex;gap:0.75rem;justify-content:flex-end;position:sticky;bottom:0;background:var(--white);}
+.form-row{margin-bottom:1rem;}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+label{font-size:12px;font-weight:500;color:var(--text-mid);display:block;margin-bottom:0.4rem;}
+input,select,textarea{
+  width:100%;padding:10px 14px;border:1.5px solid var(--cream-mid);
+  border-radius:var(--r);font-size:14px;font-family:'Noto Sans TC',sans-serif;
+  background:var(--cream);color:var(--text-dark);outline:none;transition:border-color 0.2s;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--brown-pale);}
+textarea{resize:vertical;min-height:80px;}
+.btn-primary{
+  background:var(--brown);color:#FFF8EE;padding:11px 24px;
+  border-radius:20px;font-size:14px;font-weight:500;border:none;
+  cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:all 0.2s;
+}
+.btn-primary:hover{background:var(--brown-deep);}
+.btn-ghost{
+  background:transparent;border:1.5px solid var(--cream-mid);
+  color:var(--text-mid);padding:11px 24px;border-radius:20px;
+  font-size:14px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;
+}
+.btn-ghost:hover{border-color:var(--brown-pale);}
+
+/* SUCCESS */
+.success-msg{text-align:center;padding:2rem;}
+.success-icon{font-size:56px;margin-bottom:1rem;}
+.success-title{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:700;color:var(--brown);margin-bottom:0.5rem;}
+.success-sub{font-size:14px;color:var(--text-light);line-height:1.8;}
+
+/* MORE CATS */
+.more-section{background:var(--cream-dark);padding:3rem 2rem;}
+.more-inner{max-width:1000px;margin:0 auto;}
+.more-title{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:700;color:var(--brown);margin-bottom:1.5rem;}
+.more-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.more-card{
+  background:var(--white);border-radius:var(--r-lg);overflow:hidden;
+  border:1px solid rgba(180,150,110,0.15);transition:transform 0.2s,box-shadow 0.2s;
+  cursor:pointer;
+}
+.more-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.more-img{
+  height:120px;background:var(--cream-dark);
+  display:flex;align-items:center;justify-content:center;font-size:48px;overflow:hidden;
+}
+.more-img img{width:100%;height:100%;object-fit:cover;}
+.more-body{padding:0.9rem;}
+.more-name{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;color:var(--brown);}
+.more-status{font-size:11px;color:var(--text-muted);margin-top:2px;}
+
+/* FOOTER */
+footer{
+  background:var(--brown-deep);padding:2rem;text-align:center;
+  color:rgba(255,248,238,0.45);font-size:13px;
+}
+footer a{color:rgba(255,248,238,0.7);}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+  .cat-hero{grid-template-columns:1fr;gap:1.5rem;}
+  .more-grid{grid-template-columns:1fr 1fr;}
+  .medical-grid{grid-template-columns:1fr 1fr;}
+  .form-row-2{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="logo-comma">，</span>
+      <div class="logo-text">
+        逗點浪貓關懷協會
+        <small>彰化縣</small>
+      </div>
+    </a>
+    <a href="index.html" class="nav-back">← 回首頁</a>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+  <div class="center-msg">
+    <div class="icon">🐱</div>
+    <p>載入中...</p>
+  </div>
+</div>
+
+<!-- ADOPTION MODAL -->
+<div class="modal-overlay" id="adoption-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-cat-name">送養申請</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modal-body-content">
+      <div class="modal-body">
+        <input type="hidden" id="form-cat-id">
+        <input type="hidden" id="form-cat-name-val">
+        <div class="form-row-2">
+          <div>
+            <label>你的姓名 *</label>
+            <input type="text" id="f-name" placeholder="王小明">
+          </div>
+          <div>
+            <label>聯絡電話</label>
+            <input type="tel" id="f-phone" placeholder="0912-345-678">
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Email *</label>
+          <input type="email" id="f-email" placeholder="your@email.com">
+        </div>
+        <div class="form-row-2">
+          <div>
+            <label>居住類型</label>
+            <select id="f-housing">
+              <option value="">請選擇</option>
+              <option value="公寓（無電梯）">公寓（無電梯）</option>
+              <option value="大樓（有電梯）">大樓（有電梯）</option>
+              <option value="透天厝">透天厝</option>
+              <option value="其他">其他</option>
+            </select>
+          </div>
+          <div>
+            <label>家中有其他寵物？</label>
+            <select id="f-pets">
+              <option value="false">沒有</option>
+              <option value="true">有</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>養貓經驗</label>
+          <textarea id="f-exp" placeholder="請描述你過去的養貓或養寵物經驗..."></textarea>
+        </div>
+        <div class="form-row">
+          <label>為什麼想認養這隻貓？ *</label>
+          <textarea id="f-motivation" placeholder="請告訴我們你想認養的原因..."></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-ghost" onclick="closeModal()">取消</button>
+        <button class="btn-primary" onclick="submitAdoption()" id="submit-btn">送出申請</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div>© 2025 彰化縣逗點浪貓關懷協會（籌備中）</div>
+  <div style="margin-top:0.4rem">讓更多生命，被看見，也被溫柔接住。🦋</div>
+</footer>
+
+<script>
+/* ── GET CAT ID FROM URL ── */
+var params = new URLSearchParams(location.search);
+var catId = params.get('id');
+
+if(!catId){
+  document.getElementById('main-content').innerHTML = `
+    <div class="center-msg">
+      <div class="icon">😿</div>
+      <p>找不到貓咪資料</p>
+      <a href="index.html" style="color:var(--green);font-size:13px;">← 回首頁</a>
+    </div>`;
+} else {
+  loadCat();
+}
+
+/* ── STATUS HELPERS ── */
+function statusClass(s){
+  if(s==='已送養') return 'status-adopted';
+  if(s==='照護中'||s==='過彩虹橋') return 'status-care';
+  return 'status-waiting';
+}
+
+/* ── LOAD CAT ── */
+async function loadCat(){
+  var res = await _sb.from('cats').select('*').eq('id', catId).single();
+  if(res.error || !res.data){
+    document.getElementById('main-content').innerHTML = `
+      <div class="center-msg">
+        <div class="icon">😿</div>
+        <p>找不到這隻貓咪的資料</p>
+        <a href="index.html" style="color:var(--green);font-size:13px;margin-top:0.5rem;">← 回首頁</a>
+      </div>`;
+    return;
+  }
+  var cat = res.data;
+  document.title = cat.name + ' — 彰化縣逗點浪貓關懷協會';
+
+  var canAdopt = cat.status === '待送養' || cat.status === '送養中';
+
+  document.getElementById('main-content').innerHTML = `
+    <div class="cat-hero">
+      <div class="cat-photo-wrap">
+        <div class="cat-photo">
+          ${cat.photo_url ? '<img src="'+cat.photo_url+'" alt="'+cat.name+'">' : '🐱'}
+        </div>
+        <span class="cat-status-badge ${statusClass(cat.status)}">${cat.status}</span>
+      </div>
+      <div class="cat-info">
+        <div class="cat-breadcrumb">浪貓故事 · CAT STORIES</div>
+        <div class="cat-name">${cat.name}</div>
+        <div class="cat-subtitle">${cat.color||''} ${cat.gender ? '· '+cat.gender : ''} ${cat.age_estimate ? '· '+cat.age_estimate : ''}</div>
+        <div class="cat-tags">
+          ${cat.personality ? '<span class="cat-tag">'+cat.personality+'</span>' : ''}
+          ${cat.vaccinated ? '<span class="cat-tag highlight">✓ 已接種疫苗</span>' : '<span class="cat-tag">未接種疫苗</span>'}
+          ${cat.neutered ? '<span class="cat-tag highlight">✓ 已絕育</span>' : '<span class="cat-tag">未絕育</span>'}
+        </div>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">性別</div>
+            <div class="info-value">${cat.gender||'未知'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">年齡估計</div>
+            <div class="info-value">${cat.age_estimate||'未知'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">毛色</div>
+            <div class="info-value">${cat.color||'未知'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">個性</div>
+            <div class="info-value">${cat.personality||'—'}</div>
+          </div>
+        </div>
+        ${canAdopt ? `
+        <button class="adopt-btn" onclick="openAdoption('${cat.id}','${cat.name}')">
+          🏡 我想認養${cat.name}
+        </button>` : `
+        <button class="adopt-btn" disabled>
+          ${cat.status === '已送養' ? '✓ 已找到家庭' : cat.status}
+        </button>`}
+        <div class="share-row">
+          <button class="share-btn" onclick="shareCat()">🔗 分享這隻貓</button>
+          <a href="index.html#stories" class="share-btn" style="text-align:center;display:block;">← 看其他貓咪</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-story-section">
+      ${cat.story ? `
+      <div class="story-card">
+        <span class="story-label">牠的故事</span>
+        <div class="story-text">${cat.story.replace(/\n/g,'<br>')}</div>
+      </div>` : ''}
+
+      ${cat.medical_notes || cat.vaccinated || cat.neutered ? `
+      <div class="story-card">
+        <span class="story-label">醫療狀況</span>
+        <div class="medical-grid">
+          <div class="medical-item">
+            <div class="medical-icon">${cat.vaccinated ? '✅' : '⬜'}</div>
+            <div class="medical-label">疫苗接種</div>
+            <div class="medical-value">${cat.vaccinated ? '已接種' : '尚未接種'}</div>
+          </div>
+          <div class="medical-item">
+            <div class="medical-icon">${cat.neutered ? '✅' : '⬜'}</div>
+            <div class="medical-label">絕育手術</div>
+            <div class="medical-value">${cat.neutered ? '已絕育' : '尚未絕育'}</div>
+          </div>
+          <div class="medical-item">
+            <div class="medical-icon">📋</div>
+            <div class="medical-label">其他記錄</div>
+            <div class="medical-value">${cat.medical_notes ? '有病歷' : '無特殊'}</div>
+          </div>
+        </div>
+        ${cat.medical_notes ? '<div style="margin-top:1.2rem;font-size:14px;color:var(--text-mid);line-height:2;">'+cat.medical_notes+'</div>' : ''}
+      </div>` : ''}
+
+      ${canAdopt ? `
+      <div class="story-card" style="text-align:center;background:var(--cream-dark);">
+        <div style="font-size:40px;margin-bottom:1rem;">🦋</div>
+        <div class="story-title">${cat.name}在等待一個願意接住牠的家</div>
+        <p style="font-size:14px;color:var(--text-light);line-height:2;margin:1rem 0;">
+          每一位願意伸出手的人，都是牠生命裡的逗點。<br>
+          如果你覺得${cat.name}適合你，歡迎填寫送養申請。
+        </p>
+        <button class="adopt-btn" style="max-width:300px;margin:0 auto;" onclick="openAdoption('${cat.id}','${cat.name}')">
+          填寫送養申請
+        </button>
+      </div>` : ''}
+    </div>
+  `;
+
+  loadMoreCats(cat.id);
+}
+
+/* ── MORE CATS ── */
+async function loadMoreCats(excludeId){
+  var res = await _sb.from('cats').select('id,name,status,photo_url').neq('id', excludeId).eq('status','待送養').limit(3);
+  var list = res.data || [];
+  if(!list.length) return;
+  var section = document.createElement('div');
+  section.className = 'more-section';
+  section.innerHTML = `
+    <div class="more-inner">
+      <div class="more-title">其他待送養的貓咪</div>
+      <div class="more-grid">
+        ${list.map(c=>`
+          <div class="more-card" onclick="location.href='cat.html?id=${c.id}'">
+            <div class="more-img">${c.photo_url?'<img src="'+c.photo_url+'" alt="'+c.name+'">':'🐱'}</div>
+            <div class="more-body">
+              <div class="more-name">${c.name}</div>
+              <div class="more-status">${c.status}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  document.querySelector('footer').before(section);
+}
+
+/* ── ADOPTION MODAL ── */
+function openAdoption(id, name){
+  document.getElementById('form-cat-id').value = id;
+  document.getElementById('form-cat-name-val').value = name;
+  document.getElementById('modal-cat-name').textContent = '認養申請 — ' + name;
+  document.getElementById('modal-body-content').innerHTML = document.getElementById('modal-body-content').innerHTML;
+  document.getElementById('adoption-modal').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('adoption-modal').classList.remove('open');
+}
+
+async function submitAdoption(){
+  var name = document.getElementById('f-name').value.trim();
+  var email = document.getElementById('f-email').value.trim();
+  var motivation = document.getElementById('f-motivation').value.trim();
+  if(!name || !email || !motivation){
+    alert('請填寫姓名、Email 和申請原因。');
+    return;
+  }
+  var btn = document.getElementById('submit-btn');
+  btn.textContent = '送出中...'; btn.disabled = true;
+  try{
+    var res = await _sb.from('adoption_requests').insert({
+      cat_id: document.getElementById('form-cat-id').value,
+      cat_name: document.getElementById('form-cat-name-val').value,
+      applicant_name: name,
+      email: email,
+      phone: document.getElementById('f-phone').value,
+      housing_type: document.getElementById('f-housing').value,
+      has_other_pets: document.getElementById('f-pets').value === 'true',
+      experience: document.getElementById('f-exp').value,
+      motivation: motivation,
+    });
+    if(res.error) throw res.error;
+    document.getElementById('modal-body-content').innerHTML = `
+      <div class="success-msg">
+        <div class="success-icon">🦋</div>
+        <div class="success-title">申請已送出！</div>
+        <p class="success-sub">
+          謝謝你願意成為${document.getElementById('form-cat-name-val').value||'牠'}生命裡的逗點。<br>
+          我們收到後會盡快與你聯繫。<br><br>
+          讓更多生命，被看見，也被溫柔接住。
+        </p>
+        <br>
+        <button class="btn-ghost" onclick="closeModal()" style="margin-top:0.5rem;">關閉</button>
+      </div>`;
+  }catch(e){
+    alert('送出失敗，請稍後再試。');
+    btn.textContent = '送出申請'; btn.disabled = false;
+  }
+}
+
+/* ── SHARE ── */
+function shareCat(){
+  if(navigator.share){
+    navigator.share({title: document.title, url: location.href});
+  } else {
+    navigator.clipboard.writeText(location.href);
+    alert('連結已複製！');
+  }
+}
+</script>
+</body>
+</html>
