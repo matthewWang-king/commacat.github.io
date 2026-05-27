@@ -518,7 +518,7 @@ async function submitAdoption(){
   btn.textContent = '送出中...'; btn.disabled = true;
   try{
     var res = await _sb.from('adoption_requests').insert({
-      cat_id: document.getElementById('form-cat-id').value,
+      cat_id: document.getElementById('form-cat-id').value || null,
       cat_name: document.getElementById('form-cat-name-val').value,
       applicant_name: name,
       email: email,
