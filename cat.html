@@ -529,6 +529,21 @@ async function submitAdoption(){
       motivation: motivation,
     });
     if(res.error) throw res.error;
+    await fetch('https://jztxmetatuufhfitjqtl.supabase.co/functions/v1/notify-adoption', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer sb_publishable_gFH47heYn40CYbU1xeB2Sw_cssRm_hT'
+  },
+  body: JSON.stringify({ record: {
+    applicant_name: name,
+    email: email,
+    phone: document.getElementById('f-phone').value,
+    cat_name: document.getElementById('form-cat-name-val').value,
+    housing_type: document.getElementById('f-housing').value,
+    motivation: document.getElementById('f-motivation').value,
+  }})
+});
     document.getElementById('modal-body-content').innerHTML = `
       <div class="success-msg">
         <div class="success-icon">🦋</div>
