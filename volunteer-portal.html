@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>志工專區 — 彰化縣逗點浪貓關懷協會</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const _sb = window.supabase.createClient(
+  'https://jztxmetatuufhfitjqtl.supabase.co',
+  'sb_publishable_gFH47heYn40CYbU1xeB2Sw_cssRm_hT'
+);
+</script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#FAF6EE;
+  --cream-dark:#F0E8D8;
+  --cream-mid:#E8DCC8;
+  --brown:#6B4C2A;
+  --brown-light:#9B7B5A;
+  --brown-pale:#C4A882;
+  --brown-deep:#3C2410;
+  --green:#5C7A4E;
+  --green-light:#8FAB7F;
+  --green-pale:#D4E4C8;
+  --text-dark:#2C1F0E;
+  --text-mid:#5A3E22;
+  --text-light:#8B6A4A;
+  --text-muted:#B09070;
+  --white:#FFFDF8;
+  --shadow-sm:0 2px 12px rgba(107,76,42,0.08);
+  --shadow-md:0 8px 32px rgba(107,76,42,0.12);
+  --r:10px;--r-lg:16px;--r-xl:24px;
+  --sidebar:220px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sidebar);
+  background:var(--brown-deep);display:flex;flex-direction:column;z-index:100;
+}
+.sidebar-logo{padding:1.5rem 1.2rem 1rem;border-bottom:1px solid rgba(255,248,238,0.1);}
+.sidebar-logo-main{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;color:#FFF8EE;line-height:1.4;}
+.sidebar-logo-sub{font-size:10px;color:rgba(255,248,238,0.4);letter-spacing:0.1em;margin-top:2px;}
+.sidebar-user{
+  padding:1rem 1.2rem;border-bottom:1px solid rgba(255,248,238,0.1);
+  display:flex;align-items:center;gap:10px;
+}
+.user-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--green);display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:#fff;flex-shrink:0;
+}
+.user-info{flex:1;min-width:0;}
+.user-name{font-size:13px;font-weight:500;color:#FFF8EE;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.user-role{font-size:10px;color:rgba(255,248,238,0.5);letter-spacing:0.08em;}
+.sidebar-nav{flex:1;padding:1rem 0;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:10px 1.2rem;
+  font-size:13px;color:rgba(255,248,238,0.65);cursor:pointer;
+  transition:all 0.15s;border-left:3px solid transparent;
+}
+.nav-item:hover{color:#FFF8EE;background:rgba(255,248,238,0.06);}
+.nav-item.active{color:#FFF8EE;background:rgba(255,248,238,0.1);border-left-color:var(--green-light);}
+.nav-icon{font-size:16px;width:20px;text-align:center;}
+.sidebar-footer{padding:1rem 1.2rem;border-top:1px solid rgba(255,248,238,0.1);}
+.logout-btn{
+  width:100%;padding:8px;background:rgba(255,248,238,0.08);
+  border:1px solid rgba(255,248,238,0.15);border-radius:var(--r);
+  font-size:12px;color:rgba(255,248,238,0.6);cursor:pointer;
+  font-family:'Noto Sans TC',sans-serif;transition:all 0.2s;
+}
+.logout-btn:hover{background:rgba(255,248,238,0.14);color:#FFF8EE;}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);min-height:100vh;}
+.topbar{
+  background:var(--white);border-bottom:1px solid var(--cream-dark);
+  padding:0 2rem;height:56px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:50;
+}
+.topbar-title{font-family:'Noto Serif TC',serif;font-size:16px;font-weight:700;color:var(--brown);}
+.content{padding:2rem;}
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
+
+/* WELCOME CARD */
+.welcome-card{
+  background:linear-gradient(135deg,var(--brown-deep) 0%,var(--brown) 100%);
+  border-radius:var(--r-xl);padding:2rem 2.5rem;margin-bottom:2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.welcome-card::before{
+  content:'🦋';font-size:120px;position:absolute;right:1rem;top:-20px;
+  opacity:0.15;
+}
+.welcome-text h2{
+  font-family:'Noto Serif TC',serif;font-size:22px;font-weight:700;
+  color:#FFF8EE;margin-bottom:0.4rem;
+}
+.welcome-text p{font-size:13px;color:rgba(255,248,238,0.7);line-height:1.7;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+.stat-card{
+  background:var(--white);border-radius:var(--r-lg);padding:1.2rem 1.5rem;
+  border:1px solid var(--cream-dark);
+}
+.stat-num{font-family:'Noto Serif TC',serif;font-size:2rem;font-weight:700;color:var(--brown);display:block;}
+.stat-label{font-size:12px;color:var(--text-muted);margin-top:4px;}
+
+/* SECTION TITLE */
+.sec-title{
+  font-family:'Noto Serif TC',serif;font-size:16px;font-weight:700;
+  color:var(--brown);margin-bottom:1rem;display:flex;align-items:center;gap:8px;
+}
+
+/* CAT CARDS */
+.cats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+.cat-card{
+  background:var(--white);border-radius:var(--r-lg);overflow:hidden;
+  border:1px solid var(--cream-dark);transition:transform 0.2s,box-shadow 0.2s;
+}
+.cat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.cat-img{
+  height:140px;background:var(--cream-dark);
+  display:flex;align-items:center;justify-content:center;font-size:56px;overflow:hidden;
+}
+.cat-img img{width:100%;height:100%;object-fit:cover;}
+.cat-body{padding:1rem;}
+.cat-name{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--brown);margin-bottom:0.3rem;}
+.cat-meta{font-size:12px;color:var(--text-muted);margin-bottom:0.5rem;}
+.cat-status{
+  font-size:11px;font-weight:500;padding:3px 10px;border-radius:10px;
+  display:inline-block;
+}
+.status-waiting{background:#FFF3CD;color:#856404;}
+.status-adopted{background:var(--green-pale);color:#2D5A1B;}
+.status-care{background:#D0E8FF;color:#0C447C;}
+
+/* NOTICE BOARD */
+.notice-list{display:flex;flex-direction:column;gap:0.75rem;margin-bottom:2rem;}
+.notice-item{
+  background:var(--white);border-radius:var(--r-lg);padding:1rem 1.2rem;
+  border:1px solid var(--cream-dark);display:flex;align-items:center;gap:1rem;
+}
+.notice-icon{font-size:24px;flex-shrink:0;}
+.notice-content{flex:1;}
+.notice-title{font-size:14px;font-weight:500;color:var(--brown);margin-bottom:0.2rem;}
+.notice-date{font-size:12px;color:var(--text-muted);}
+.notice-tag{
+  font-size:11px;padding:3px 10px;border-radius:10px;
+  background:var(--green-pale);color:var(--green);font-weight:500;flex-shrink:0;
+}
+
+/* MY INFO */
+.info-card{
+  background:var(--white);border-radius:var(--r-xl);padding:2rem;
+  border:1px solid var(--cream-dark);margin-bottom:1.5rem;
+}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.info-item{}
+.info-label{font-size:11px;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.3rem;}
+.info-value{font-size:14px;font-weight:500;color:var(--brown);}
+.skill-pills{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.3rem;}
+.skill-pill{
+  background:var(--green-pale);color:var(--green);
+  font-size:11px;padding:3px 10px;border-radius:10px;font-weight:500;
+}
+.edit-btn{
+  display:inline-flex;align-items:center;gap:6px;padding:8px 18px;
+  background:transparent;border:1.5px solid var(--cream-mid);border-radius:var(--r);
+  font-size:13px;color:var(--text-mid);cursor:pointer;font-family:'Noto Sans TC',sans-serif;
+  transition:all 0.2s;margin-top:1rem;
+}
+.edit-btn:hover{border-color:var(--brown-pale);color:var(--brown);}
+
+/* TASKS */
+.task-list{display:flex;flex-direction:column;gap:0.75rem;}
+.task-item{
+  background:var(--white);border-radius:var(--r-lg);padding:1rem 1.2rem;
+  border:1px solid var(--cream-dark);display:flex;align-items:center;gap:1rem;
+}
+.task-check{
+  width:20px;height:20px;border-radius:50%;border:2px solid var(--cream-mid);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.2s;
+}
+.task-check.done{background:var(--green);border-color:var(--green);color:#fff;font-size:11px;}
+.task-content{flex:1;}
+.task-title{font-size:14px;color:var(--text-dark);margin-bottom:0.2rem;}
+.task-meta{font-size:12px;color:var(--text-muted);}
+.task-tag{font-size:11px;padding:3px 10px;border-radius:10px;background:var(--cream-dark);color:var(--brown-light);}
+
+/* EMPTY */
+.empty{padding:2rem;text-align:center;color:var(--text-muted);}
+.empty-icon{font-size:36px;margin-bottom:0.6rem;}
+
+/* LOADING */
+#loading-screen{
+  position:fixed;inset:0;background:var(--brown-deep);
+  display:flex;align-items:center;justify-content:center;z-index:999;
+}
+.loading-logo{
+  font-family:'Noto Serif TC',serif;font-size:24px;font-weight:700;
+  color:#FFF8EE;text-align:center;
+}
+.loading-sub{font-size:13px;color:rgba(255,248,238,0.5);margin-top:0.5rem;letter-spacing:0.1em;}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);transition:transform 0.3s;}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .cats-grid{grid-template-columns:1fr 1fr;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .info-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div>
+    <div class="loading-logo">，逗點浪貓關懷協會</div>
+    <div class="loading-sub">載入志工專區中...</div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-main">，逗點浪貓關懷協會</div>
+    <div class="sidebar-logo-sub">志工專區</div>
+  </div>
+  <div class="sidebar-user">
+    <div class="user-avatar" id="user-avatar">🤝</div>
+    <div class="user-info">
+      <div class="user-name" id="user-name">載入中...</div>
+      <div class="user-role">志工</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" onclick="showPage('home')">
+      <span class="nav-icon">🏠</span> 首頁總覽
+    </div>
+    <div class="nav-item" onclick="showPage('cats')">
+      <span class="nav-icon">🐱</span> 貓咪資訊
+    </div>
+    <div class="nav-item" onclick="showPage('tasks')">
+      <span class="nav-icon">📋</span> 我的任務
+    </div>
+    <div class="nav-item" onclick="showPage('profile')">
+      <span class="nav-icon">👤</span> 我的資料
+    </div>
+    <div class="nav-item" onclick="location.href='index.html'">
+      <span class="nav-icon">🌐</span> 前往官網
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="logout-btn" onclick="doLogout()">登出</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="page-title">首頁總覽</div>
+    <div style="font-size:12px;color:var(--text-muted)" id="topbar-date"></div>
+  </div>
+  <div class="content">
+
+    <!-- HOME -->
+    <div class="page active" id="page-home">
+      <div class="welcome-card">
+        <div class="welcome-text">
+          <h2>歡迎回來，<span id="welcome-name">志工</span> 🦋</h2>
+          <p>感謝你成為逗點的夥伴。<br>每一個願意伸出手的人，都是牠們生命裡的逗點。</p>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-num" id="stat-cats">—</span>
+          <div class="stat-label">🐱 目前貓咪數</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" id="stat-waiting">—</span>
+          <div class="stat-label">⏳ 待送養</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" id="stat-adopted">—</span>
+          <div class="stat-label">🏡 已送養</div>
+        </div>
+      </div>
+
+      <div class="sec-title">📢 最新公告</div>
+      <div class="notice-list" id="notice-list">
+        <div class="notice-item">
+          <div class="notice-icon">📌</div>
+          <div class="notice-content">
+            <div class="notice-title">歡迎加入逗點志工團隊！</div>
+            <div class="notice-date">協會籌備中，感謝你的支持</div>
+          </div>
+          <span class="notice-tag">公告</span>
+        </div>
+        <div class="notice-item">
+          <div class="notice-icon">🐱</div>
+          <div class="notice-content">
+            <div class="notice-title">協會正式運作後將安排志工說明會</div>
+            <div class="notice-date">屆時會透過 Email 通知各位志工</div>
+          </div>
+          <span class="notice-tag">活動</span>
+        </div>
+        <div class="notice-item">
+          <div class="notice-icon">📋</div>
+          <div class="notice-content">
+            <div class="notice-title">如有緊急救援需求，請聯絡協會信箱</div>
+            <div class="notice-date">我們會盡快回覆</div>
+          </div>
+          <span class="notice-tag">重要</span>
+        </div>
+      </div>
+
+      <div class="sec-title">🐱 最新貓咪</div>
+      <div class="cats-grid" id="home-cats">
+        <div class="empty"><div class="empty-icon">🐱</div>載入中...</div>
+      </div>
+    </div>
+
+    <!-- CATS -->
+    <div class="page" id="page-cats">
+      <div class="sec-title">🐱 所有貓咪資訊</div>
+      <div class="cats-grid" id="all-cats">
+        <div class="empty"><div class="empty-icon">🐱</div>載入中...</div>
+      </div>
+    </div>
+
+    <!-- TASKS -->
+    <div class="page" id="page-tasks">
+      <div class="sec-title">📋 我的任務</div>
+      <div class="task-list" id="task-list">
+        <!-- 目前為靜態任務，之後可串接資料庫 -->
+        <div class="task-item">
+          <div class="task-check" onclick="toggleTask(this)"></div>
+          <div class="task-content">
+            <div class="task-title">完成志工資料填寫</div>
+            <div class="task-meta">請確認你的聯絡資料和專長是否正確</div>
+          </div>
+          <span class="task-tag">個人資料</span>
+        </div>
+        <div class="task-item">
+          <div class="task-check" onclick="toggleTask(this)"></div>
+          <div class="task-content">
+            <div class="task-title">閱讀志工須知</div>
+            <div class="task-meta">協會正式運作後將提供完整志工手冊</div>
+          </div>
+          <span class="task-tag">必讀</span>
+        </div>
+        <div class="task-item">
+          <div class="task-check" onclick="toggleTask(this)"></div>
+          <div class="task-content">
+            <div class="task-title">關注協會籌備進度</div>
+            <div class="task-meta">追蹤 Facebook / LINE 官方帳號取得最新消息</div>
+          </div>
+          <span class="task-tag">待辦</span>
+        </div>
+        <div class="task-item">
+          <div class="task-check" onclick="toggleTask(this)"></div>
+          <div class="task-content">
+            <div class="task-title">分享協會資訊給身邊的朋友</div>
+            <div class="task-meta">讓更多人知道逗點浪貓關懷協會的存在</div>
+          </div>
+          <span class="task-tag">推廣</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="page-profile">
+      <div class="sec-title">👤 我的志工資料</div>
+      <div class="info-card">
+        <div class="info-grid" id="profile-grid">
+          <div class="empty"><div class="empty-icon">👤</div>載入中...</div>
+        </div>
+        <button class="edit-btn" onclick="location.href='mailto:s8990045@gmail.com?subject=志工資料更新申請'">
+          ✏️ 申請更新資料
+        </button>
+      </div>
+
+      <div class="sec-title">🔐 帳號安全</div>
+      <div class="info-card">
+        <div class="info-item" style="margin-bottom:1rem;">
+          <div class="info-label">登入 Email</div>
+          <div class="info-value" id="profile-email">—</div>
+        </div>
+        <button class="edit-btn" onclick="resetPwd()">🔑 重設密碼</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var currentUser = null;
+var currentProfile = null;
+
+/* ── 初始化 ── */
+(async()=>{
+  var {data:{session}} = await _sb.auth.getSession();
+  if(!session){
+    location.href='login.html';
+    return;
+  }
+  currentUser = session.user;
+
+  // 取得 profile
+  var {data:profile} = await _sb.from('profiles').select('*').eq('id',currentUser.id).single();
+
+  // 管理員跳轉
+  if(profile?.role === '管理員'){
+    location.href='admin.html';
+    return;
+  }
+
+  currentProfile = profile;
+
+  // 設定使用者資訊
+  var name = profile?.name || currentUser.email.split('@')[0];
+  document.getElementById('user-name').textContent = name;
+  document.getElementById('welcome-name').textContent = name;
+  document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
+
+  // 設定日期
+  var now = new Date();
+  document.getElementById('topbar-date').textContent =
+    now.getFullYear()+'/'+(now.getMonth()+1).toString().padStart(2,'0')+'/'+now.getDate().toString().padStart(2,'0');
+
+  // 載入資料
+  loadStats();
+  loadHomeCats();
+  loadProfile();
+
+  // 隱藏 loading
+  document.getElementById('loading-screen').style.display='none';
+})();
+
+/* ── 導航 ── */
+const pageTitles = {home:'首頁總覽',cats:'貓咪資訊',tasks:'我的任務',profile:'我的資料'};
+
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+name+"'"))
+      n.classList.add('active');
+  });
+  document.getElementById('page-title').textContent = pageTitles[name]||name;
+  if(name==='cats') loadAllCats();
+}
+
+/* ── 統計 ── */
+async function loadStats(){
+  var {data:cats} = await _sb.from('cats').select('id,status');
+  var all = cats||[];
+  document.getElementById('stat-cats').textContent = all.length;
+  document.getElementById('stat-waiting').textContent = all.filter(c=>c.status==='待送養').length;
+  document.getElementById('stat-adopted').textContent = all.filter(c=>c.status==='已送養').length;
+}
+
+/* ── 貓咪卡片 HTML ── */
+function catCardHtml(cat){
+  var statusClass = cat.status==='已送養'?'status-adopted':cat.status==='照護中'?'status-care':'status-waiting';
+  return `<div class="cat-card" onclick="location.href='cat.html?id=${cat.id}'">
+    <div class="cat-img">${cat.photo_url?'<img src="'+cat.photo_url+'" alt="'+cat.name+'">':'🐱'}</div>
+    <div class="cat-body">
+      <div class="cat-name">${cat.name}</div>
+      <div class="cat-meta">${cat.color||''} ${cat.gender?'· '+cat.gender:''}</div>
+      <span class="cat-status ${statusClass}">${cat.status}</span>
+    </div>
+  </div>`;
+}
+
+/* ── 首頁貓咪 ── */
+async function loadHomeCats(){
+  var {data:cats} = await _sb.from('cats').select('*').order('created_at',{ascending:false}).limit(3);
+  var el = document.getElementById('home-cats');
+  if(!cats||!cats.length){
+    el.innerHTML='<div class="empty"><div class="empty-icon">🐱</div><p>目前還沒有貓咪資料</p></div>';
+    return;
+  }
+  el.innerHTML = cats.map(catCardHtml).join('');
+}
+
+/* ── 所有貓咪 ── */
+async function loadAllCats(){
+  var {data:cats} = await _sb.from('cats').select('*').order('created_at',{ascending:false});
+  var el = document.getElementById('all-cats');
+  if(!cats||!cats.length){
+    el.innerHTML='<div class="empty"><div class="empty-icon">🐱</div><p>目前還沒有貓咪資料</p></div>';
+    return;
+  }
+  el.innerHTML = cats.map(catCardHtml).join('');
+}
+
+/* ── 個人資料 ── */
+function loadProfile(){
+  var p = currentProfile;
+  if(!p){ return; }
+  document.getElementById('profile-email').textContent = currentUser.email;
+  document.getElementById('profile-grid').innerHTML = `
+    <div class="info-item">
+      <div class="info-label">姓名</div>
+      <div class="info-value">${p.name||'—'}</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">電話</div>
+      <div class="info-value">${p.phone||'—'}</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">身份</div>
+      <div class="info-value">${p.role||'志工'}</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">加入時間</div>
+      <div class="info-value">${p.created_at?p.created_at.slice(0,10):'—'}</div>
+    </div>
+  `;
+}
+
+/* ── 任務勾選 ── */
+function toggleTask(el){
+  el.classList.toggle('done');
+  el.textContent = el.classList.contains('done') ? '✓' : '';
+}
+
+/* ── 重設密碼 ── */
+async function resetPwd(){
+  var res = await _sb.auth.resetPasswordForEmail(currentUser.email,{
+    redirectTo:'https://matthewwang-king.github.io/commacat.github.io/login.html'
+  });
+  if(!res.error) alert('重設密碼連結已寄到你的信箱！');
+}
+
+/* ── 登出 ── */
+async function doLogout(){
+  await _sb.auth.signOut();
+  location.href='login.html';
+}
+</script>
+</body>
+</html>
