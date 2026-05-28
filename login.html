@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>登入 — 彰化縣逗點浪貓關懷協會</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const _sb = window.supabase.createClient(
+  'https://jztxmetatuufhfitjqtl.supabase.co',
+  'sb_publishable_gFH47heYn40CYbU1xeB2Sw_cssRm_hT'
+);
+</script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#FAF6EE;
+  --cream-dark:#F0E8D8;
+  --brown:#6B4C2A;
+  --brown-deep:#3C2410;
+  --brown-pale:#C4A882;
+  --green:#5C7A4E;
+  --green-light:#8FAB7F;
+  --green-pale:#D4E4C8;
+  --text-dark:#2C1F0E;
+  --text-mid:#5A3E22;
+  --text-light:#8B6A4A;
+  --text-muted:#B09070;
+  --white:#FFFDF8;
+  --red:#C0392B;
+  --shadow-md:0 8px 40px rgba(44,31,14,0.18);
+}
+html{height:100%}
+body{
+  font-family:'Noto Sans TC',sans-serif;
+  background:var(--brown-deep);
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:2rem;
+  position:relative;overflow:hidden;
+}
+body::before{
+  content:'，';
+  font-family:'Noto Serif TC',serif;
+  font-size:400px;color:rgba(255,248,238,0.03);
+  position:absolute;right:-60px;top:-80px;line-height:1;
+  pointer-events:none;
+}
+body::after{
+  content:'';
+  position:absolute;
+  bottom:-100px;left:-100px;
+  width:400px;height:400px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(92,122,78,0.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+/* CARD */
+.login-wrap{
+  width:100%;max-width:420px;position:relative;z-index:1;
+}
+.login-logo{text-align:center;margin-bottom:2rem;}
+.logo-comma{
+  font-family:'Noto Serif TC',serif;font-size:48px;font-weight:700;
+  color:var(--green-light);line-height:1;display:block;margin-bottom:0.3rem;
+}
+.logo-name{
+  font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;
+  color:#FFF8EE;line-height:1.4;
+}
+.logo-sub{font-size:11px;color:rgba(255,248,238,0.4);letter-spacing:0.15em;margin-top:4px;}
+
+/* TABS */
+.tabs{
+  display:flex;background:rgba(255,248,238,0.07);
+  border-radius:14px;padding:4px;margin-bottom:1.5rem;
+  border:1px solid rgba(255,248,238,0.1);
+}
+.tab{
+  flex:1;padding:9px;text-align:center;font-size:13px;
+  color:rgba(255,248,238,0.55);border-radius:10px;cursor:pointer;
+  transition:all 0.2s;font-weight:400;
+}
+.tab.active{
+  background:var(--white);color:var(--brown);font-weight:500;
+}
+
+/* FORM CARD */
+.form-card{
+  background:var(--white);border-radius:20px;padding:2rem;
+  box-shadow:var(--shadow-md);
+}
+.form-title{
+  font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;
+  color:var(--brown);margin-bottom:0.3rem;
+}
+.form-sub{font-size:12px;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.6;}
+
+.form-label{font-size:12px;font-weight:500;color:var(--text-mid);display:block;margin-bottom:0.4rem;}
+.form-input{
+  width:100%;padding:11px 14px;border:1.5px solid var(--cream-dark);
+  border-radius:10px;font-size:14px;font-family:'Noto Sans TC',sans-serif;
+  background:var(--cream);color:var(--text-dark);outline:none;
+  transition:border-color 0.2s;margin-bottom:1rem;
+}
+.form-input:focus{border-color:var(--brown-pale);}
+
+.form-btn{
+  width:100%;padding:13px;background:var(--brown);color:#FFF8EE;
+  border:none;border-radius:14px;font-size:15px;font-weight:500;
+  cursor:pointer;font-family:'Noto Serif TC',serif;
+  transition:all 0.2s;letter-spacing:0.06em;
+}
+.form-btn:hover{background:var(--brown-deep);}
+.form-btn:disabled{background:var(--brown-pale);cursor:not-allowed;}
+.form-btn.green{background:var(--green);}
+.form-btn.green:hover{background:var(--green-light);}
+
+.form-err{
+  font-size:12px;color:var(--red);margin-bottom:1rem;
+  background:#fdecea;padding:8px 12px;border-radius:8px;display:none;
+}
+.form-divider{
+  text-align:center;font-size:12px;color:var(--text-muted);
+  margin:1rem 0;position:relative;
+}
+.form-divider::before,.form-divider::after{
+  content:'';position:absolute;top:50%;width:40%;height:1px;
+  background:var(--cream-dark);
+}
+.form-divider::before{left:0;}
+.form-divider::after{right:0;}
+
+.form-link{
+  display:block;text-align:center;font-size:13px;color:var(--green);
+  margin-top:1rem;cursor:pointer;
+}
+.form-link:hover{color:var(--green-light);}
+
+/* REGISTER EXTRA */
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+.form-row-2 .form-input{margin-bottom:0;}
+.role-pills{display:flex;gap:0.5rem;margin-bottom:1rem;}
+.role-pill{
+  flex:1;padding:8px;text-align:center;border-radius:10px;
+  border:1.5px solid var(--cream-dark);font-size:12px;
+  color:var(--text-light);cursor:pointer;transition:all 0.2s;
+}
+.role-pill.selected{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:500;}
+.role-label{font-size:11px;color:var(--text-muted);margin-bottom:0.5rem;display:block;}
+
+/* SUCCESS */
+.success-card{
+  background:var(--white);border-radius:20px;padding:2.5rem 2rem;
+  text-align:center;box-shadow:var(--shadow-md);display:none;
+}
+.success-icon{font-size:56px;margin-bottom:1rem;}
+.success-title{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:700;color:var(--brown);margin-bottom:0.5rem;}
+.success-sub{font-size:13px;color:var(--text-light);line-height:1.9;}
+.success-redirect{font-size:12px;color:var(--text-muted);margin-top:1rem;}
+
+/* BACK */
+.back-link{
+  text-align:center;margin-top:1.5rem;
+  font-size:12px;color:rgba(255,248,238,0.4);
+}
+.back-link a{color:rgba(255,248,238,0.6);}
+.back-link a:hover{color:#FFF8EE;}
+
+/* FORGOT */
+.forgot-link{
+  font-size:12px;color:var(--text-muted);text-align:right;
+  display:block;margin-top:-0.5rem;margin-bottom:1rem;cursor:pointer;
+}
+.forgot-link:hover{color:var(--brown);}
+</style>
+</head>
+<body>
+
+<div class="login-wrap">
+  <!-- LOGO -->
+  <div class="login-logo">
+    <span class="logo-comma">，</span>
+    <div class="logo-name">彰化縣逗點浪貓關懷協會</div>
+    <div class="logo-sub">會員 · 志工 · 管理員 登入</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('login')">登入</div>
+    <div class="tab" onclick="switchTab('register')">註冊</div>
+    <div class="tab" onclick="switchTab('forgot')">忘記密碼</div>
+  </div>
+
+  <!-- LOGIN FORM -->
+  <div class="form-card" id="tab-login">
+    <div class="form-title">歡迎回來</div>
+    <div class="form-sub">登入後根據你的角色自動跳轉到對應頁面</div>
+    <div class="form-err" id="login-err"></div>
+    <label class="form-label">Email</label>
+    <input type="email" id="login-email" class="form-input" placeholder="your@email.com">
+    <label class="form-label">密碼</label>
+    <input type="password" id="login-pwd" class="form-input" placeholder="••••••••">
+    <span class="forgot-link" onclick="switchTab('forgot')">忘記密碼？</span>
+    <button class="form-btn" onclick="doLogin()" id="login-btn">登入</button>
+    <div class="form-divider">或</div>
+    <span class="form-link" onclick="switchTab('register')">還沒有帳號？立即註冊</span>
+  </div>
+
+  <!-- REGISTER FORM -->
+  <div class="form-card" id="tab-register" style="display:none;">
+    <div class="form-title">建立帳號</div>
+    <div class="form-sub">註冊後請等候管理員審核，我們會透過 Email 通知你</div>
+    <div class="form-err" id="reg-err"></div>
+
+    <span class="role-label">你要加入的身份</span>
+    <div class="role-pills">
+      <div class="role-pill selected" onclick="selectRole(this,'會員')" id="role-member">
+        🏡 會員<br><span style="font-size:10px;opacity:0.7;">追蹤送養進度</span>
+      </div>
+      <div class="role-pill" onclick="selectRole(this,'志工')" id="role-volunteer">
+        🤝 志工<br><span style="font-size:10px;opacity:0.7;">參與救援工作</span>
+      </div>
+    </div>
+    <input type="hidden" id="reg-role" value="會員">
+
+    <div class="form-row-2" style="margin-bottom:1rem;">
+      <div>
+        <label class="form-label">姓名 *</label>
+        <input type="text" id="reg-name" class="form-input" placeholder="王小明">
+      </div>
+      <div>
+        <label class="form-label">電話</label>
+        <input type="tel" id="reg-phone" class="form-input" placeholder="0912-345-678">
+      </div>
+    </div>
+    <label class="form-label">Email *</label>
+    <input type="email" id="reg-email" class="form-input" placeholder="your@email.com">
+    <label class="form-label">密碼 *（至少 6 位）</label>
+    <input type="password" id="reg-pwd" class="form-input" placeholder="••••••••">
+    <label class="form-label">確認密碼 *</label>
+    <input type="password" id="reg-pwd2" class="form-input" placeholder="••••••••">
+    <button class="form-btn green" onclick="doRegister()" id="reg-btn">建立帳號</button>
+    <span class="form-link" onclick="switchTab('login')">已有帳號？返回登入</span>
+  </div>
+
+  <!-- FORGOT FORM -->
+  <div class="form-card" id="tab-forgot" style="display:none;">
+    <div class="form-title">重設密碼</div>
+    <div class="form-sub">輸入你的 Email，我們會寄送重設密碼的連結</div>
+    <div class="form-err" id="forgot-err"></div>
+    <label class="form-label">Email</label>
+    <input type="email" id="forgot-email" class="form-input" placeholder="your@email.com">
+    <button class="form-btn" onclick="doForgot()" id="forgot-btn">寄送重設連結</button>
+    <span class="form-link" onclick="switchTab('login')">返回登入</span>
+  </div>
+
+  <!-- SUCCESS CARD -->
+  <div class="success-card" id="success-card">
+    <div class="success-icon" id="success-icon">🦋</div>
+    <div class="success-title" id="success-title">登入成功！</div>
+    <p class="success-sub" id="success-sub">正在跳轉...</p>
+    <p class="success-redirect" id="success-redirect"></p>
+  </div>
+
+  <div class="back-link">
+    <a href="index.html">← 回首頁</a>
+  </div>
+</div>
+
+<script>
+/* ── TAB 切換 ── */
+function switchTab(tab){
+  ['login','register','forgot'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display = t===tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach((el,i)=>{
+    el.classList.toggle('active', ['login','register','forgot'][i]===tab);
+  });
+}
+
+/* ── 角色選擇 ── */
+function selectRole(el, role){
+  document.querySelectorAll('.role-pill').forEach(p=>p.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('reg-role').value = role;
+}
+
+/* ── 顯示成功 ── */
+function showSuccess(icon, title, sub, redirect, delay=2000){
+  document.querySelectorAll('.form-card').forEach(c=>c.style.display='none');
+  var sc = document.getElementById('success-card');
+  sc.style.display='block';
+  document.getElementById('success-icon').textContent = icon;
+  document.getElementById('success-title').textContent = title;
+  document.getElementById('success-sub').textContent = sub;
+  if(redirect){
+    document.getElementById('success-redirect').textContent = '正在跳轉...';
+    setTimeout(()=>location.href=redirect, delay);
+  }
+}
+
+/* ── 顯示錯誤 ── */
+function showErr(id, msg){
+  var el = document.getElementById(id);
+  el.textContent = msg; el.style.display='block';
+}
+function clearErr(id){ document.getElementById(id).style.display='none'; }
+
+/* ── 登入 ── */
+async function doLogin(){
+  clearErr('login-err');
+  var email = document.getElementById('login-email').value.trim();
+  var pwd = document.getElementById('login-pwd').value;
+  if(!email||!pwd){ showErr('login-err','請填寫 Email 和密碼'); return; }
+
+  var btn = document.getElementById('login-btn');
+  btn.textContent='登入中...'; btn.disabled=true;
+
+  try{
+    var res = await _sb.auth.signInWithPassword({email, password:pwd});
+    if(res.error) throw res.error;
+
+    // 取得角色
+    var uid = res.data.user.id;
+    var profile = await _sb.from('profiles').select('role,name').eq('id',uid).single();
+    var role = profile.data?.role || '會員';
+    var name = profile.data?.name || email;
+
+    // 根據角色跳轉
+    if(role === '管理員'){
+      showSuccess('🎉', '歡迎回來，管理員', '正在前往後台管理系統...', 'admin.html', 1500);
+    } else if(role === '志工'){
+      showSuccess('🤝', '歡迎回來，'+name, '正在前往志工專區...', 'volunteer-portal.html', 1500);
+    } else {
+      showSuccess('🦋', '歡迎回來，'+name, '正在前往會員專區...', 'member-portal.html', 1500);
+    }
+  }catch(e){
+    var msg = e.message;
+    if(msg.includes('Invalid login')) msg = 'Email 或密碼錯誤，請再試一次';
+    if(msg.includes('Email not confirmed')) msg = '請先確認你的 Email 信箱';
+    showErr('login-err', msg);
+    btn.textContent='登入'; btn.disabled=false;
+  }
+}
+
+/* ── 註冊 ── */
+async function doRegister(){
+  clearErr('reg-err');
+  var name = document.getElementById('reg-name').value.trim();
+  var email = document.getElementById('reg-email').value.trim();
+  var pwd = document.getElementById('reg-pwd').value;
+  var pwd2 = document.getElementById('reg-pwd2').value;
+  var role = document.getElementById('reg-role').value;
+
+  if(!name||!email||!pwd){ showErr('reg-err','請填寫所有必填欄位'); return; }
+  if(pwd.length<6){ showErr('reg-err','密碼至少需要 6 位'); return; }
+  if(pwd!==pwd2){ showErr('reg-err','兩次密碼不一致'); return; }
+
+  var btn = document.getElementById('reg-btn');
+  btn.textContent='建立中...'; btn.disabled=true;
+
+  try{
+    // 建立 Auth 帳號
+    var res = await _sb.auth.signUp({
+      email, password:pwd,
+      options:{ data:{ name, role } }
+    });
+    if(res.error) throw res.error;
+
+    // 更新 profile（觸發器已建立預設志工，這裡更新角色和名字）
+    if(res.data.user){
+      await _sb.from('profiles').upsert({
+        id: res.data.user.id,
+        role: role,
+        name: name,
+        phone: document.getElementById('reg-phone').value,
+      });
+    }
+
+    showSuccess(
+      '📬',
+      '帳號建立成功！',
+      '我們已寄送確認信到 '+email+'，\n請點擊信中連結完成驗證後即可登入。',
+      null
+    );
+    document.getElementById('success-redirect').textContent = '驗證後返回登入頁面';
+    document.getElementById('success-card').querySelector('.success-sub').style.whiteSpace='pre-line';
+
+  }catch(e){
+    var msg = e.message;
+    if(msg.includes('already registered')) msg = '這個 Email 已經註冊過了';
+    showErr('reg-err', msg);
+    btn.textContent='建立帳號'; btn.disabled=false;
+  }
+}
+
+/* ── 忘記密碼 ── */
+async function doForgot(){
+  clearErr('forgot-err');
+  var email = document.getElementById('forgot-email').value.trim();
+  if(!email){ showErr('forgot-err','請填寫 Email'); return; }
+
+  var btn = document.getElementById('forgot-btn');
+  btn.textContent='寄送中...'; btn.disabled=true;
+
+  try{
+    var res = await _sb.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://matthewwang-king.github.io/commacat.github.io/login.html'
+    });
+    if(res.error) throw res.error;
+    showSuccess('📬','重設連結已寄出','請檢查你的 Email 信箱，點擊連結後即可設定新密碼。',null);
+  }catch(e){
+    showErr('forgot-err', e.message);
+    btn.textContent='寄送重設連結'; btn.disabled=false;
+  }
+}
+
+/* ── 鍵盤 Enter ── */
+document.addEventListener('keydown', e=>{
+  if(e.key!=='Enter') return;
+  var loginTab = document.getElementById('tab-login');
+  var regTab = document.getElementById('tab-register');
+  var forgotTab = document.getElementById('tab-forgot');
+  if(loginTab.style.display!=='none') doLogin();
+  else if(regTab.style.display!=='none') doRegister();
+  else if(forgotTab.style.display!=='none') doForgot();
+});
+
+/* ── 已登入直接跳轉 ── */
+(async()=>{
+  var {data:{session}} = await _sb.auth.getSession();
+  if(session){
+    var uid = session.user.id;
+    var profile = await _sb.from('profiles').select('role').eq('id',uid).single();
+    var role = profile.data?.role || '會員';
+    if(role==='管理員') location.href='admin.html';
+    else if(role==='志工') location.href='volunteer-portal.html';
+    else location.href='member-portal.html';
+  }
+})();
+</script>
+</body>
+</html>
