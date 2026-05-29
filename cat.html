@@ -527,6 +527,7 @@ async function submitAdoption(){
       has_other_pets: document.getElementById('f-pets').value === 'true',
       experience: document.getElementById('f-exp').value,
       motivation: motivation,
+      user_id: (await _sb.auth.getSession()).data?.session?.user?.id || null,
     });
     if(res.error) throw res.error;
 // 送出 Email 通知（失敗不影響申請）
