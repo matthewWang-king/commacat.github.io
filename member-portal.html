@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>會員專區 — 彰化縣逗點浪貓關懷協會</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const _sb = window.supabase.createClient(
+  'https://jztxmetatuufhfitjqtl.supabase.co',
+  'sb_publishable_gFH47heYn40CYbU1xeB2Sw_cssRm_hT'
+);
+</script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#FAF6EE;
+  --cream-dark:#F0E8D8;
+  --cream-mid:#E8DCC8;
+  --brown:#6B4C2A;
+  --brown-pale:#C4A882;
+  --brown-deep:#3C2410;
+  --green:#5C7A4E;
+  --green-light:#8FAB7F;
+  --green-pale:#D4E4C8;
+  --text-dark:#2C1F0E;
+  --text-mid:#5A3E22;
+  --text-light:#8B6A4A;
+  --text-muted:#B09070;
+  --white:#FFFDF8;
+  --shadow-sm:0 2px 12px rgba(107,76,42,0.08);
+  --shadow-md:0 8px 32px rgba(107,76,42,0.12);
+  --r:10px;--r-lg:16px;--r-xl:24px;
+  --sidebar:220px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh;}
+
+/* LOADING */
+#loading-screen{
+  position:fixed;inset:0;background:var(--brown-deep);
+  display:flex;align-items:center;justify-content:center;z-index:999;
+}
+.loading-logo{font-family:'Noto Serif TC',serif;font-size:24px;font-weight:700;color:#FFF8EE;text-align:center;}
+.loading-sub{font-size:13px;color:rgba(255,248,238,0.5);margin-top:0.5rem;letter-spacing:0.1em;}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sidebar);
+  background:var(--brown-deep);display:flex;flex-direction:column;z-index:100;
+}
+.sidebar-logo{padding:1.5rem 1.2rem 1rem;border-bottom:1px solid rgba(255,248,238,0.1);}
+.sidebar-logo-main{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;color:#FFF8EE;line-height:1.4;}
+.sidebar-logo-sub{font-size:10px;color:rgba(255,248,238,0.4);letter-spacing:0.1em;margin-top:2px;}
+.sidebar-user{
+  padding:1rem 1.2rem;border-bottom:1px solid rgba(255,248,238,0.1);
+  display:flex;align-items:center;gap:10px;
+}
+.user-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--green);display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:#fff;flex-shrink:0;font-weight:500;
+}
+.user-info{flex:1;min-width:0;}
+.user-name{font-size:13px;font-weight:500;color:#FFF8EE;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.user-role{font-size:10px;color:rgba(255,248,238,0.5);letter-spacing:0.08em;}
+.sidebar-nav{flex:1;padding:1rem 0;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:10px 1.2rem;
+  font-size:13px;color:rgba(255,248,238,0.65);cursor:pointer;
+  transition:all 0.15s;border-left:3px solid transparent;
+}
+.nav-item:hover{color:#FFF8EE;background:rgba(255,248,238,0.06);}
+.nav-item.active{color:#FFF8EE;background:rgba(255,248,238,0.1);border-left-color:var(--green-light);}
+.nav-icon{font-size:16px;width:20px;text-align:center;}
+.sidebar-footer{padding:1rem 1.2rem;border-top:1px solid rgba(255,248,238,0.1);}
+.logout-btn{
+  width:100%;padding:8px;background:rgba(255,248,238,0.08);
+  border:1px solid rgba(255,248,238,0.15);border-radius:var(--r);
+  font-size:12px;color:rgba(255,248,238,0.6);cursor:pointer;
+  font-family:'Noto Sans TC',sans-serif;transition:all 0.2s;
+}
+.logout-btn:hover{background:rgba(255,248,238,0.14);color:#FFF8EE;}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);min-height:100vh;}
+.topbar{
+  background:var(--white);border-bottom:1px solid var(--cream-dark);
+  padding:0 2rem;height:56px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:50;
+}
+.topbar-title{font-family:'Noto Serif TC',serif;font-size:16px;font-weight:700;color:var(--brown);}
+.content{padding:2rem;}
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
+
+/* WELCOME */
+.welcome-card{
+  background:linear-gradient(135deg,var(--green) 0%,var(--green-light) 100%);
+  border-radius:var(--r-xl);padding:2rem 2.5rem;margin-bottom:2rem;
+  position:relative;overflow:hidden;
+}
+.welcome-card::before{
+  content:'🦋';font-size:120px;position:absolute;right:1rem;top:-20px;
+  opacity:0.15;
+}
+.welcome-text h2{
+  font-family:'Noto Serif TC',serif;font-size:22px;font-weight:700;
+  color:#FFF8EE;margin-bottom:0.4rem;
+}
+.welcome-text p{font-size:13px;color:rgba(255,255,255,0.8);line-height:1.7;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+.stat-card{
+  background:var(--white);border-radius:var(--r-lg);padding:1.2rem 1.5rem;
+  border:1px solid var(--cream-dark);
+}
+.stat-num{font-family:'Noto Serif TC',serif;font-size:2rem;font-weight:700;color:var(--brown);display:block;}
+.stat-label{font-size:12px;color:var(--text-muted);margin-top:4px;}
+
+/* SECTION */
+.sec-title{
+  font-family:'Noto Serif TC',serif;font-size:16px;font-weight:700;
+  color:var(--brown);margin-bottom:1rem;display:flex;align-items:center;gap:8px;
+}
+
+/* ADOPTION STATUS */
+.adoption-list{display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem;}
+.adoption-item{
+  background:var(--white);border-radius:var(--r-lg);padding:1.2rem 1.5rem;
+  border:1px solid var(--cream-dark);display:flex;align-items:center;gap:1.2rem;
+}
+.adoption-cat-img{
+  width:56px;height:56px;border-radius:var(--r);
+  background:var(--cream-dark);display:flex;align-items:center;justify-content:center;
+  font-size:28px;flex-shrink:0;overflow:hidden;
+}
+.adoption-cat-img img{width:100%;height:100%;object-fit:cover;}
+.adoption-content{flex:1;}
+.adoption-cat-name{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--brown);margin-bottom:0.2rem;}
+.adoption-date{font-size:12px;color:var(--text-muted);margin-bottom:0.5rem;}
+.adoption-status{
+  font-size:11px;font-weight:500;padding:4px 12px;border-radius:12px;display:inline-block;
+}
+.status-pending{background:#FFF3CD;color:#856404;}
+.status-reviewing{background:#D0E8FF;color:#0C447C;}
+.status-approved{background:var(--green-pale);color:#2D5A1B;}
+.status-rejected{background:#FDECEA;color:#C0392B;}
+.adoption-motivation{
+  font-size:12px;color:var(--text-light);margin-top:0.5rem;
+  line-height:1.6;max-width:400px;
+}
+
+/* PROGRESS BAR */
+.progress-wrap{margin-top:0.8rem;}
+.progress-steps{display:flex;align-items:center;gap:0;}
+.step{display:flex;flex-direction:column;align-items:center;position:relative;}
+.step-dot{
+  width:20px;height:20px;border-radius:50%;border:2px solid var(--cream-mid);
+  background:var(--white);display:flex;align-items:center;justify-content:center;
+  font-size:10px;z-index:1;transition:all 0.2s;
+}
+.step.done .step-dot{background:var(--green);border-color:var(--green);color:#fff;}
+.step.current .step-dot{background:var(--brown);border-color:var(--brown);color:#fff;}
+.step-label{font-size:10px;color:var(--text-muted);margin-top:4px;white-space:nowrap;}
+.step.done .step-label,.step.current .step-label{color:var(--brown);}
+.step-line{width:40px;height:2px;background:var(--cream-mid);margin-bottom:14px;}
+.step-line.done{background:var(--green);}
+
+/* CATS GRID */
+.cats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+.cat-card{
+  background:var(--white);border-radius:var(--r-lg);overflow:hidden;
+  border:1px solid var(--cream-dark);transition:transform 0.2s,box-shadow 0.2s;
+  position:relative;
+}
+.cat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.cat-img{
+  height:140px;background:var(--cream-dark);
+  display:flex;align-items:center;justify-content:center;font-size:56px;overflow:hidden;
+}
+.cat-img img{width:100%;height:100%;object-fit:cover;}
+.cat-body{padding:1rem;}
+.cat-name{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--brown);margin-bottom:0.3rem;}
+.cat-meta{font-size:12px;color:var(--text-muted);margin-bottom:0.6rem;}
+.cat-btns{display:flex;gap:0.5rem;}
+.cat-btn{
+  flex:1;padding:6px;border-radius:var(--r);font-size:12px;
+  border:1.5px solid var(--cream-mid);color:var(--text-mid);
+  background:transparent;cursor:pointer;font-family:'Noto Sans TC',sans-serif;
+  transition:all 0.2s;text-align:center;text-decoration:none;display:block;
+}
+.cat-btn:hover{border-color:var(--brown-pale);color:var(--brown);}
+.cat-btn.primary{background:var(--brown);color:#FFF8EE;border-color:var(--brown);}
+.cat-btn.primary:hover{background:var(--brown-deep);}
+.fav-btn{
+  position:absolute;top:10px;right:10px;
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,253,248,0.9);border:none;cursor:pointer;
+  font-size:14px;display:flex;align-items:center;justify-content:center;
+  transition:transform 0.2s;
+}
+.fav-btn:hover{transform:scale(1.2);}
+
+/* PROFILE */
+.info-card{
+  background:var(--white);border-radius:var(--r-xl);padding:2rem;
+  border:1px solid var(--cream-dark);margin-bottom:1.5rem;
+}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.info-label{font-size:11px;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.3rem;}
+.info-value{font-size:14px;font-weight:500;color:var(--brown);}
+.edit-btn{
+  display:inline-flex;align-items:center;gap:6px;padding:8px 18px;
+  background:transparent;border:1.5px solid var(--cream-mid);border-radius:var(--r);
+  font-size:13px;color:var(--text-mid);cursor:pointer;font-family:'Noto Sans TC',sans-serif;
+  transition:all 0.2s;margin-top:1rem;
+}
+.edit-btn:hover{border-color:var(--brown-pale);color:var(--brown);}
+
+/* EMPTY */
+.empty{padding:2.5rem;text-align:center;color:var(--text-muted);}
+.empty-icon{font-size:40px;margin-bottom:0.8rem;}
+.empty-text{font-size:14px;line-height:1.7;}
+.empty-link{
+  display:inline-block;margin-top:1rem;padding:8px 20px;
+  background:var(--brown);color:#FFF8EE;border-radius:20px;font-size:13px;
+  text-decoration:none;transition:background 0.2s;
+}
+.empty-link:hover{background:var(--brown-deep);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .main{margin-left:0;}
+  .cats-grid{grid-template-columns:1fr 1fr;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .info-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div>
+    <div class="loading-logo">，逗點浪貓關懷協會</div>
+    <div class="loading-sub">載入會員專區中...</div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-main">，逗點浪貓關懷協會</div>
+    <div class="sidebar-logo-sub">會員專區</div>
+  </div>
+  <div class="sidebar-user">
+    <div class="user-avatar" id="user-avatar">🦋</div>
+    <div class="user-info">
+      <div class="user-name" id="user-name">載入中...</div>
+      <div class="user-role">會員</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" onclick="showPage('home')">
+      <span class="nav-icon">🏠</span> 首頁總覽
+    </div>
+    <div class="nav-item" onclick="showPage('adoptions')">
+      <span class="nav-icon">🏡</span> 我的申請
+    </div>
+    <div class="nav-item" onclick="showPage('cats')">
+      <span class="nav-icon">🐱</span> 瀏覽貓咪
+    </div>
+    <div class="nav-item" onclick="showPage('profile')">
+      <span class="nav-icon">👤</span> 我的資料
+    </div>
+    <div class="nav-item" onclick="location.href='index.html'">
+      <span class="nav-icon">🌐</span> 前往官網
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="logout-btn" onclick="doLogout()">登出</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="page-title">首頁總覽</div>
+    <div style="font-size:12px;color:var(--text-muted)" id="topbar-date"></div>
+  </div>
+  <div class="content">
+
+    <!-- HOME -->
+    <div class="page active" id="page-home">
+      <div class="welcome-card">
+        <div class="welcome-text">
+          <h2>歡迎回來，<span id="welcome-name">會員</span> 🦋</h2>
+          <p>感謝你關注逗點浪貓關懷協會。<br>每一份關心，都是浪貓生命裡的逗點。</p>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-num" id="stat-my-adoptions">—</span>
+          <div class="stat-label">🏡 我的送養申請</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" id="stat-pending">—</span>
+          <div class="stat-label">⏳ 審核中</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" id="stat-approved">—</span>
+          <div class="stat-label">✅ 通過申請</div>
+        </div>
+      </div>
+
+      <div class="sec-title">🏡 最新送養申請進度</div>
+      <div id="home-adoptions">
+        <div class="empty"><div class="empty-icon">⏳</div>載入中...</div>
+      </div>
+
+      <div class="sec-title" style="margin-top:1.5rem;">🐱 最新待送養貓咪</div>
+      <div class="cats-grid" id="home-cats">
+        <div class="empty"><div class="empty-icon">🐱</div>載入中...</div>
+      </div>
+    </div>
+
+    <!-- MY ADOPTIONS -->
+    <div class="page" id="page-adoptions">
+      <div class="sec-title">🏡 我的送養申請記錄</div>
+      <div class="adoption-list" id="all-adoptions">
+        <div class="empty"><div class="empty-icon">🏡</div>載入中...</div>
+      </div>
+    </div>
+
+    <!-- CATS -->
+    <div class="page" id="page-cats">
+      <div class="sec-title">🐱 瀏覽所有貓咪</div>
+      <div class="cats-grid" id="all-cats">
+        <div class="empty"><div class="empty-icon">🐱</div>載入中...</div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="page-profile">
+      <div class="sec-title">👤 我的資料</div>
+      <div class="info-card">
+        <div class="info-grid" id="profile-grid">
+          <div class="empty">載入中...</div>
+        </div>
+        <button class="edit-btn" onclick="location.href='mailto:s8990045@gmail.com?subject=會員資料更新申請'">
+          ✏️ 申請更新資料
+        </button>
+      </div>
+      <div class="sec-title">🔐 帳號安全</div>
+      <div class="info-card">
+        <div class="info-label">登入 Email</div>
+        <div class="info-value" id="profile-email" style="margin-bottom:1rem;">—</div>
+        <button class="edit-btn" onclick="resetPwd()">🔑 重設密碼</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var currentUser = null;
+var currentProfile = null;
+
+/* ── 初始化 ── */
+(async()=>{
+  var {data:{session}} = await _sb.auth.getSession();
+  if(!session){ location.href='login.html'; return; }
+  currentUser = session.user;
+
+  var {data:profile} = await _sb.from('profiles').select('*').eq('id',currentUser.id).single();
+
+  // 根據角色跳轉
+  if(profile?.role==='管理員'){ location.href='admin.html'; return; }
+  if(profile?.role==='志工'){ location.href='volunteer-portal.html'; return; }
+
+  currentProfile = profile;
+  var name = profile?.name || currentUser.email.split('@')[0];
+  document.getElementById('user-name').textContent = name;
+  document.getElementById('welcome-name').textContent = name;
+  document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
+
+  var now = new Date();
+  document.getElementById('topbar-date').textContent =
+    now.getFullYear()+'/'+(now.getMonth()+1).toString().padStart(2,'0')+'/'+now.getDate().toString().padStart(2,'0');
+
+  loadStats();
+  loadHomeAdoptions();
+  loadHomeCats();
+  loadProfile();
+
+  document.getElementById('loading-screen').style.display='none';
+})();
+
+/* ── 導航 ── */
+const pageTitles={home:'首頁總覽',adoptions:'我的申請',cats:'瀏覽貓咪',profile:'我的資料'};
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+name+"'"))
+      n.classList.add('active');
+  });
+  document.getElementById('page-title').textContent = pageTitles[name]||name;
+  if(name==='adoptions') loadAllAdoptions();
+  if(name==='cats') loadAllCats();
+}
+
+/* ── 狀態對應 ── */
+function statusHtml(s){
+  var map={'待審核':'status-pending 待審核','審核中':'status-reviewing 審核中','通過':'status-approved ✅ 通過','婉拒':'status-rejected 婉拒'};
+  var parts=(map[s]||'status-pending '+s).split(' ');
+  var cls=parts.shift();
+  return '<span class="adoption-status '+cls+'">'+parts.join(' ')+'</span>';
+}
+
+/* ── 進度條 ── */
+function progressHtml(status){
+  var steps=['待審核','審核中','通過'];
+  var idx=steps.indexOf(status);
+  if(status==='婉拒') return '<div style="font-size:12px;color:#C0392B;margin-top:0.5rem;">此申請已婉拒</div>';
+  return '<div class="progress-wrap"><div class="progress-steps">'
+    +steps.map((s,i)=>{
+      var cls=i<idx?'done':i===idx?'current':'';
+      var line=i<steps.length-1?'<div class="step-line'+(i<idx?' done':'')+'"></div>':'';
+      return '<div class="step '+cls+'"><div class="step-dot">'+(i<idx?'✓':'')+'</div><div class="step-label">'+s+'</div></div>'+line;
+    }).join('')
+    +'</div></div>';
+}
+
+/* ── 申請卡片 ── */
+function adoptionCardHtml(a){
+  return `<div class="adoption-item">
+    <div class="adoption-cat-img">🐱</div>
+    <div class="adoption-content">
+      <div class="adoption-cat-name">${a.cat_name||'貓咪'}</div>
+      <div class="adoption-date">申請時間：${a.created_at?a.created_at.slice(0,10):'—'}</div>
+      ${statusHtml(a.status)}
+      ${progressHtml(a.status)}
+      ${a.motivation?'<div class="adoption-motivation">申請原因：'+a.motivation.slice(0,60)+(a.motivation.length>60?'...':'')+'</div>':''}
+    </div>
+    <a href="cat.html?id=${a.cat_id||''}" class="cat-btn" style="width:auto;padding:8px 16px;white-space:nowrap;">查看貓咪</a>
+  </div>`;
+}
+
+/* ── 統計 ── */
+async function loadStats(){
+  var {data:adoptions} = await _sb.from('adoption_requests').select('id,status').eq('email',currentUser.email);
+  var all = adoptions||[];
+  document.getElementById('stat-my-adoptions').textContent = all.length;
+  document.getElementById('stat-pending').textContent = all.filter(a=>a.status==='待審核'||a.status==='審核中').length;
+  document.getElementById('stat-approved').textContent = all.filter(a=>a.status==='通過').length;
+}
+
+/* ── 首頁申請 ── */
+async function loadHomeAdoptions(){
+  var {data:list} = await _sb.from('adoption_requests').select('*')
+    .eq('email',currentUser.email).order('created_at',{ascending:false}).limit(3);
+  var el = document.getElementById('home-adoptions');
+  if(!list||!list.length){
+    el.innerHTML=`<div class="empty">
+      <div class="empty-icon">🏡</div>
+      <div class="empty-text">還沒有送養申請記錄<br>找到喜歡的貓咪就去申請吧！</div>
+      <a href="index.html#stories" class="empty-link">瀏覽待送養貓咪</a>
+    </div>`;
+    return;
+  }
+  el.innerHTML='<div class="adoption-list">'+list.map(adoptionCardHtml).join('')+'</div>';
+}
+
+/* ── 所有申請 ── */
+async function loadAllAdoptions(){
+  var {data:list} = await _sb.from('adoption_requests').select('*')
+    .eq('email',currentUser.email).order('created_at',{ascending:false});
+  var el = document.getElementById('all-adoptions');
+  if(!list||!list.length){
+    el.innerHTML=`<div class="empty">
+      <div class="empty-icon">🏡</div>
+      <div class="empty-text">還沒有送養申請記錄</div>
+      <a href="index.html#stories" class="empty-link">去找喜歡的貓咪</a>
+    </div>`;
+    return;
+  }
+  el.innerHTML = list.map(adoptionCardHtml).join('');
+}
+
+/* ── 貓咪卡片 ── */
+function catCardHtml(cat){
+  return `<div class="cat-card">
+    <div class="cat-img">${cat.photo_url?'<img src="'+cat.photo_url+'" alt="'+cat.name+'">':'🐱'}</div>
+    <div class="cat-body">
+      <div class="cat-name">${cat.name}</div>
+      <div class="cat-meta">${cat.color||''} ${cat.gender?'· '+cat.gender:''} ${cat.age_estimate?'· '+cat.age_estimate:''}</div>
+      <div class="cat-btns">
+        <a href="cat.html?id=${cat.id}" class="cat-btn">了解更多</a>
+        <a href="cat.html?id=${cat.id}" class="cat-btn primary">申請認養</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ── 首頁貓咪 ── */
+async function loadHomeCats(){
+  var {data:cats} = await _sb.from('cats').select('*').eq('status','待送養')
+    .order('created_at',{ascending:false}).limit(3);
+  var el = document.getElementById('home-cats');
+  if(!cats||!cats.length){
+    el.innerHTML='<div class="empty"><div class="empty-icon">🐱</div><div class="empty-text">目前沒有待送養貓咪</div></div>';
+    return;
+  }
+  el.innerHTML = cats.map(catCardHtml).join('');
+}
+
+/* ── 所有貓咪 ── */
+async function loadAllCats(){
+  var {data:cats} = await _sb.from('cats').select('*').order('created_at',{ascending:false});
+  var el = document.getElementById('all-cats');
+  if(!cats||!cats.length){
+    el.innerHTML='<div class="empty"><div class="empty-icon">🐱</div><div class="empty-text">目前沒有貓咪資料</div></div>';
+    return;
+  }
+  el.innerHTML = cats.map(catCardHtml).join('');
+}
+
+/* ── 個人資料 ── */
+function loadProfile(){
+  var p = currentProfile;
+  document.getElementById('profile-email').textContent = currentUser.email;
+  document.getElementById('profile-grid').innerHTML = `
+    <div>
+      <div class="info-label">姓名</div>
+      <div class="info-value">${p?.name||'—'}</div>
+    </div>
+    <div>
+      <div class="info-label">電話</div>
+      <div class="info-value">${p?.phone||'—'}</div>
+    </div>
+    <div>
+      <div class="info-label">身份</div>
+      <div class="info-value">${p?.role||'會員'}</div>
+    </div>
+    <div>
+      <div class="info-label">加入時間</div>
+      <div class="info-value">${p?.created_at?p.created_at.slice(0,10):'—'}</div>
+    </div>
+  `;
+}
+
+/* ── 重設密碼 ── */
+async function resetPwd(){
+  var res = await _sb.auth.resetPasswordForEmail(currentUser.email,{
+    redirectTo:'https://matthewwang-king.github.io/commacat.github.io/login.html'
+  });
+  if(!res.error) alert('重設密碼連結已寄到你的信箱！');
+}
+
+/* ── 登出 ── */
+async function doLogout(){
+  await _sb.auth.signOut();
+  location.href='login.html';
+}
+</script>
+</body>
+</html>
