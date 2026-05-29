@@ -337,7 +337,7 @@ async function doLogin(){
     } else if(role === '志工'){
       showSuccess('🤝', '歡迎回來，'+name, '正在前往志工專區...', 'volunteer-portal.html', 1500);
     } else {
-      showSuccess('🦋', '歡迎回來，'+name, '歡迎加入逗點！', 'index.html', 1500);
+      showSuccess('🦋', '歡迎回來，'+name, '歡迎加入逗點！', 'member-portal.html', 1500);
     }
   }catch(e){
     var msg = e.message;
