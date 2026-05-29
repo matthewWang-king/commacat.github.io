@@ -381,6 +381,7 @@ var currentProfile = null;
   var {data:profile} = await _sb.from('profiles').select('*').eq('id',currentUser.id).single();
 
   // 根據角色跳轉
+  console.log('role:', profile?.role, 'data:', profile);
   if(profile?.role==='管理員'){ location.href='admin.html'; return; }
   if(profile?.role==='志工'){ location.href='volunteer-portal.html'; return; }
 
